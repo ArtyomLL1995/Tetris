@@ -116,7 +116,7 @@ class Figure {
     drawScore() {
         Canvas.scoreScreenCtx.clearRect(0,0,200,200)
         Canvas.scoreScreenCtx.font = '24px verdana'
-        Canvas.scoreScreenCtx.fillStyle = 'white'
+        Canvas.scoreScreenCtx.fillStyle = 'black'
         Canvas.scoreScreenCtx.fillText('LEVEL ' + Canvas.level, 10, 20, 200)
         Canvas.scoreScreenCtx.fillText('Points ' + Canvas.points, 10, 60, 200)
     }
@@ -124,7 +124,7 @@ class Figure {
     drawFigure() {
         this.activeFigure.forEach(figure => {
             Canvas.ctx.fillStyle = this.color
-            Canvas.ctx.strokeStyle = 'black'
+            Canvas.ctx.strokeStyle = 'white'
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
             Canvas.ctx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
@@ -133,7 +133,7 @@ class Figure {
     drawNextFigure() {
         this.nextFigureCoords.forEach(figure => {
             Canvas.childCtx.fillStyle = this.nextColor
-            Canvas.childCtx.strokeStyle = 'black'
+            Canvas.childCtx.strokeStyle = 'white'
             Canvas.childCtx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
             Canvas.childCtx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
@@ -142,7 +142,7 @@ class Figure {
     drawFallenFigures() {
         Array.from(Canvas.filledCoordsMap.keys()).forEach(figure => {
             Canvas.ctx.fillStyle = Canvas.filledCoordsMap.get(figure)
-            Canvas.ctx.strokeStyle = 'black'
+            Canvas.ctx.strokeStyle = 'white'
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
             Canvas.ctx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
@@ -303,7 +303,6 @@ class Figure {
             requestAnimationFrame(() => this.moveDown());
         } else {
             if (this.activeFigure[0].y <= 0) {
-                console.log('Game over')
                 this.gameOver()
             } else {
                 this.activeFigure.forEach(figure => {
