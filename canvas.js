@@ -16,24 +16,30 @@ class FigureForms {
     static zigzagLeft = [{x : 0, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize)}]
     static zigzagRight = [{x : Utils.edgeSize, y : -(Utils.edgeSize*3)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize*3)}, {x : 0, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize*2)}]
     
-    static colors2Level = ['rgb(125, 250, 146)', 'rgb(57, 250, 90)', 'rgb(15, 209, 47)', 'rgb(242, 134, 10)', 'rgb(247, 194, 134)', 'rgb(100, 168, 245)', 'rgb(153, 197, 247)']
+    static colors = ['#7DFA92', '#FFCF56', '#351431', '#7F0799', '#FF570A', '#3993DD', '#20A4F3']
    
     static allFiguresMap = new Map()
+
+    static populateFiguresMap() {
+        if (this.allFiguresMap.size === 0) {
+            this.allFiguresMap
+            .set(this.line, 'line')
+            .set(this.cube, 'cube')
+            .set(this.pyramid, 'pyramid')
+            .set(this.hookLeft, 'hookLeft')
+            .set(this.hookRight, 'hookRight')
+            .set(this.zigzagLeft, 'zigzagLeft')
+            .set(this.zigzagRight, 'zigzagRight')
+        }
+    }
     
     static getRandomFigure() {
-        this.allFiguresMap.set(this.line, 'line')
-        this.allFiguresMap.set(this.cube, 'cube')
-        this.allFiguresMap.set(this.pyramid, 'pyramid')
-        this.allFiguresMap.set(this.hookLeft, 'hookLeft')
-        this.allFiguresMap.set(this.hookRight, 'hookRight')
-        this.allFiguresMap.set(this.zigzagLeft, 'zigzagLeft')
-        this.allFiguresMap.set(this.zigzagRight, 'zigzagRight')
+        this.populateFiguresMap()
         return Array.from(this.allFiguresMap.keys())[Math.floor(Math.random() * Array.from(this.allFiguresMap.keys()).length)]
     }
 
     static getRandomColor() {
-        const colors = this.colors2Level
-        return colors[Math.floor(Math.random() * colors.length)]
+        return this.colors[Math.floor(Math.random() * this.colors.length)]
     }
 }
 
@@ -55,7 +61,7 @@ class Canvas {
     static direction = 'down'
     static currentFigure
     static nextFigure = FigureForms.getRandomFigure()
-    static nextColor = FigureForms.getRandomColor(this.level)
+    static nextColor = FigureForms.getRandomColor()
     static currentColor
     static points = 0
     static level = 1
@@ -67,7 +73,7 @@ class Canvas {
         this.currentFigure = this.nextFigure
         this.nextFigure = FigureForms.getRandomFigure()
         this.currentColor = this.nextColor
-        this.nextColor = FigureForms.getRandomColor(this.level)
+        this.nextColor = FigureForms.getRandomColor()
         const type = FigureForms.allFiguresMap.get(this.currentFigure)
         const newFigureCoords = JSON.parse(JSON.stringify(this.currentFigure)).map(obj => {
             return {x : obj.x + startOffset, y: obj.y}
@@ -376,19 +382,16 @@ class Figure {
         let collision = false
         const filledCoordsStr = Canvas.filledCoordsSortedStr
         for (let i = 0; i < coords.length; i++) {
-            if (direction === 'left' && coords[i].x === 0 || 
-            direction === 'right' && coords[i].x === Canvas.canvasWidth - Utils.edgeSize ||
-            direction === 'turn' && (coords[i].x < 0 || coords[i].x >= Canvas.canvasWidth)) {
-
-            
-            collision = true
-            break
-            } else if (Canvas.filledCoordsSorted[0] && coords[i].y >= Canvas.filledCoordsSorted[0].y) {
-                if (direction === 'left' && filledCoordsStr.includes(JSON.stringify({x:coords[i].x - Utils.edgeSize, y: coords[i].y})) || 
-                    direction === 'right' && filledCoordsStr.includes(JSON.stringify({x:coords[i].x + Utils.edgeSize, y: coords[i].y}))) {
-                        
+            if (direction === 'left'   && coords[i].x === 0                                         || 
+                direction === 'right'  && coords[i].x === Canvas.canvasWidth - Utils.edgeSize       ||
+                direction === 'turn'   && (coords[i].x < 0 || coords[i].x >= Canvas.canvasWidth)) {
                     collision = true
-                    break   
+                    break
+            } else if (Canvas.filledCoordsSorted[0] && coords[i].y >= Canvas.filledCoordsSorted[0].y) {
+                if (direction === 'left'    && filledCoordsStr.includes(JSON.stringify({x:coords[i].x - Utils.edgeSize, y: coords[i].y})) || 
+                    direction === 'right'   && filledCoordsStr.includes(JSON.stringify({x:coords[i].x + Utils.edgeSize, y: coords[i].y}))) {
+                        collision = true
+                        break   
                 }
             }
         }
