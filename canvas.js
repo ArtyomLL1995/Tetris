@@ -343,13 +343,23 @@ class Figure {
 
     changeFigureCoords(direction) {
         switch (direction) {
-            case 'down': if (!this.collisionCheck('down', this.activeFigure)) this.activeFigure.map(figure => figure.y += Utils.edgeSize)
+            
+            case 'down': if (!this.collisionCheck('down', this.activeFigure)) {
+                this.activeFigure.map(figure => figure.y += Utils.edgeSize)
+            } 
             break
+
             case 'up': this.turnFigure(this.type)
             break
-            case 'right': if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) this.activeFigure.map(figure => figure.x += Utils.edgeSize)            
+
+            case 'right': if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) {
+                this.activeFigure.map(figure => figure.x += Utils.edgeSize) 
+            }            
             break
-            case 'left':  if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) this.activeFigure.map(figure => figure.x -= Utils.edgeSize)
+
+            case 'left':  if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) {
+                this.activeFigure.map(figure => figure.x -= Utils.edgeSize)
+            } 
             break
         }
     }
