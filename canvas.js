@@ -97,7 +97,6 @@ class Figure {
     createNewFigure = false
     collision = false
     direction
-    //animationFrameId
     constructor(newFigureCoords, nextFigureCoords, type, color, nextColor) {
         this.type = type
         this.activeFigure = newFigureCoords
@@ -130,7 +129,7 @@ class Figure {
     drawFigure() {
         this.activeFigure.forEach(figure => {
             Canvas.ctx.fillStyle = this.color
-            Canvas.ctx.strokeStyle = 'white'
+            Canvas.ctx.strokeStyle = this.color
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
             Canvas.ctx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
@@ -139,7 +138,7 @@ class Figure {
     drawNextFigure() {
         this.nextFigureCoords.forEach(figure => {
             Canvas.childCtx.fillStyle = this.nextColor
-            Canvas.childCtx.strokeStyle = 'white'
+            Canvas.childCtx.strokeStyle = this.nextColor
             Canvas.childCtx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
             Canvas.childCtx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
@@ -148,7 +147,7 @@ class Figure {
     drawFallenFigures() {
         Array.from(Canvas.filledCoordsMap.keys()).forEach(figure => {
             Canvas.ctx.fillStyle = Canvas.filledCoordsMap.get(figure)
-            Canvas.ctx.strokeStyle = 'white'
+            Canvas.ctx.strokeStyle = Canvas.filledCoordsMap.get(figure)
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
             Canvas.ctx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
