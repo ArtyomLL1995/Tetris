@@ -129,27 +129,21 @@ class Figure {
     drawFigure() {
         this.activeFigure.forEach(figure => {
             Canvas.ctx.fillStyle = this.color
-            Canvas.ctx.strokeStyle = this.color
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
-            Canvas.ctx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
     }
 
     drawNextFigure() {
         this.nextFigureCoords.forEach(figure => {
             Canvas.childCtx.fillStyle = this.nextColor
-            Canvas.childCtx.strokeStyle = this.nextColor
             Canvas.childCtx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
-            Canvas.childCtx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
     }
 
     drawFallenFigures() {
         Array.from(Canvas.filledCoordsMap.keys()).forEach(figure => {
             Canvas.ctx.fillStyle = Canvas.filledCoordsMap.get(figure)
-            Canvas.ctx.strokeStyle = Canvas.filledCoordsMap.get(figure)
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
-            Canvas.ctx.strokeRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
     }
 
