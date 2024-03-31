@@ -92,11 +92,16 @@ class Canvas {
 }
 
 class Figure {
+
     figurePosition = 'right'
     startAnimationTime = null
     createNewFigure = false
     collision = false
     direction
+    quickMoveInterval = null
+    moveFigureStartTime = null
+
+
     constructor(newFigureCoords, nextFigureCoords, type, color, nextColor) {
         this.type = type
         this.activeFigure = newFigureCoords
@@ -107,15 +112,43 @@ class Figure {
 
     initializeListener() {
         document.addEventListener('keydown', this.moveFigure.bind(this))
+        document.addEventListener('keypress', this.moveFigure.bind(this))
+        document.addEventListener('keyup', this.handleKeyUp.bind(this))
+    }
+
+    handleKeyPress() {
+        console.log('key press')
     }
    
     moveFigure(event) {
+        // console.log('ljlkjlj')
+        // if (!this.moveFigureStartTime) {
+        //     this.moveFigureStartTime = Date.parse(new Date)
+        // }
         const eventKeyCode = event.keyCode
         if (Canvas.keyDirections[eventKeyCode] === 'right') this.direction = 'right'
         else if (Canvas.keyDirections[eventKeyCode] === 'left') this.direction = 'left'
         else if (Canvas.keyDirections[eventKeyCode] === 'up') this.direction = 'up'
         else if (Canvas.keyDirections[eventKeyCode] === 'down') this.direction = 'down'
-        this.moveSide(this.direction)  
+        if (this.direction === 'up') {
+            this.manualTurn()
+        } else {
+            if (!this.quickMoveInterval) {
+                this.quickMoveInterval = this.quickMove()
+            }
+            
+            // if (this.moveFigureStartTime - Date.parse(new Date) > 50 && !this.quickMoveInterval) {
+            //     this.quickMoveInterval = this.quickMove()
+            // } else {
+            //     this.manualTurn()
+            // }
+        }
+    }
+
+    handleKeyUp() {
+        clearInterval(this.quickMoveInterval)
+        this.quickMoveInterval = null
+        this.moveFigureStartTime = null
     }
 
     drawScore() {
@@ -279,6 +312,7 @@ class Figure {
     }
 
     moveDown() {
+
         const date = new Date
         if (!this.startAnimationTime) this.startAnimationTime = date.getTime()
         Canvas.childCtx.clearRect(0,0,300,100)
@@ -287,19 +321,20 @@ class Figure {
         this.drawNextFigure()
         this.drawScore()
         this.drawFigure()
+
         if (date.getTime() - this.startAnimationTime > Canvas.SPEED) {
+            this.collisionCheck('down', this.activeFigure)
             if (this.collision) {
-                this.collisionCheck('down', this.activeFigure)
-                if (this.collision) this.createNewFigure = true
-            } 
-            if (!this.createNewFigure) {
+                this.createNewFigure = true
+            } else {
                 this.startAnimationTime = null
-                this.collisionCheck('down', this.activeFigure)
                 this.changeFigureCoords('down') 
+                requestAnimationFrame(() => this.moveDown())
             }
         }
+
         if (!this.createNewFigure) {
-            requestAnimationFrame(() => this.moveDown());
+            requestAnimationFrame(() => this.moveDown())
         } else {
             if (this.activeFigure[0].y <= 0) {
                 this.gameOver()
@@ -327,12 +362,19 @@ class Figure {
         Canvas.ctx.fillText('OVER', 100, 260, 200)
     }
 
-    moveSide(direction) {
+    quickMove() {
+        return setInterval(() => {
+            this.manualTurn()
+        }, 50)
+    }
+
+    manualTurn() {
         this.activeFigure.forEach(figure => {
             Canvas.ctx.clearRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize) 
         })
-        this.changeFigureCoords(direction)
+        this.changeFigureCoords(this.direction)
         this.drawFigure()
+        console.log('turn: ' + this.direction)
     }
 
     changeFigureCoords(direction) {
@@ -375,7 +417,9 @@ class Figure {
             }
         }
         if (collision) {
-            if (direction === 'down') this.collision = true
+            if (direction === 'down') {
+                this.collision = true
+            } 
             return true
         } 
         return false
