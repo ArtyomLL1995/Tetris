@@ -99,8 +99,8 @@ class Figure {
     collision = false
     direction
     quickMoveInterval = null
-    moveFigureStartTime = null
-
+    animationId = null
+    pressTimer
 
     constructor(newFigureCoords, nextFigureCoords, type, color, nextColor) {
         this.type = type
@@ -112,43 +112,33 @@ class Figure {
 
     initializeListener() {
         document.addEventListener('keydown', this.moveFigure.bind(this))
-        document.addEventListener('keypress', this.moveFigure.bind(this))
         document.addEventListener('keyup', this.handleKeyUp.bind(this))
-    }
-
-    handleKeyPress() {
-        console.log('key press')
     }
    
     moveFigure(event) {
-        // console.log('ljlkjlj')
-        // if (!this.moveFigureStartTime) {
-        //     this.moveFigureStartTime = Date.parse(new Date)
-        // }
+        const context = this
         const eventKeyCode = event.keyCode
         if (Canvas.keyDirections[eventKeyCode] === 'right') this.direction = 'right'
         else if (Canvas.keyDirections[eventKeyCode] === 'left') this.direction = 'left'
         else if (Canvas.keyDirections[eventKeyCode] === 'up') this.direction = 'up'
         else if (Canvas.keyDirections[eventKeyCode] === 'down') this.direction = 'down'
-        if (this.direction === 'up') {
+        
+        if (this.direction !== 'down') {
             this.manualTurn()
-        } else {
-            if (!this.quickMoveInterval) {
-                this.quickMoveInterval = this.quickMove()
-            }
-            
-            // if (this.moveFigureStartTime - Date.parse(new Date) > 50 && !this.quickMoveInterval) {
-            //     this.quickMoveInterval = this.quickMove()
-            // } else {
-            //     this.manualTurn()
-            // }
+        }
+        if (this.direction !== 'up' && !this.pressTimer) {
+            this.pressTimer = setTimeout(function() {
+                context.quickMoveInterval = context.quickMove()
+            }, 100)
         }
     }
 
     handleKeyUp() {
         clearInterval(this.quickMoveInterval)
+        clearTimeout(this.pressTimer)
+        this.animationId = null
         this.quickMoveInterval = null
-        this.moveFigureStartTime = null
+        this.pressTimer = null
     }
 
     drawScore() {
@@ -179,7 +169,6 @@ class Figure {
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
     }
-
     
     turnFigure(type) {
         const coordsCopy = JSON.parse(JSON.stringify(this.activeFigure))
@@ -316,7 +305,7 @@ class Figure {
         const date = new Date
         if (!this.startAnimationTime) this.startAnimationTime = date.getTime()
         Canvas.childCtx.clearRect(0,0,300,100)
-        Canvas.ctx.clearRect(0, 0, 300, 500)
+        Canvas.ctx.clearRect(0,0,300,500)
         this.drawFallenFigures()
         this.drawNextFigure()
         this.drawScore()
@@ -374,7 +363,6 @@ class Figure {
         })
         this.changeFigureCoords(this.direction)
         this.drawFigure()
-        console.log('turn: ' + this.direction)
     }
 
     changeFigureCoords(direction) {
