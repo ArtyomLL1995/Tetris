@@ -122,15 +122,19 @@ class Figure {
         else if (Canvas.keyDirections[eventKeyCode] === 'left') this.direction = 'left'
         else if (Canvas.keyDirections[eventKeyCode] === 'up') this.direction = 'up'
         else if (Canvas.keyDirections[eventKeyCode] === 'down') this.direction = 'down'
-        
-        if (this.direction !== 'down') {
-            this.manualTurn()
-        }
+        this.manualTurn()
         if (this.direction !== 'up' && !this.pressTimer) {
             this.pressTimer = setTimeout(function() {
-                context.quickMoveInterval = context.quickMove()
+                context.quickMoveInterval = context.direction === 'down' ? context.quickMove(20) : context.quickMove(40)
             }, 100)
         }
+    }
+
+    quickMove(speed) {
+        clearInterval(this.quickMoveInterval)
+        return setInterval(() => {
+            this.manualTurn()
+        }, speed)
     }
 
     handleKeyUp() {
@@ -351,11 +355,11 @@ class Figure {
         Canvas.ctx.fillText('OVER', 100, 260, 200)
     }
 
-    quickMove() {
-        return setInterval(() => {
-            this.manualTurn()
-        }, 50)
-    }
+    // quickMove() {
+    //     return setInterval(() => {
+    //         this.manualTurn()
+    //     }, 20)
+    // }
 
     manualTurn() {
         this.activeFigure.forEach(figure => {
