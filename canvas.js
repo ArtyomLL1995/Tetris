@@ -8,13 +8,13 @@ class Utils {
 
 class FigureForms {
 
-    static cube = [{x : 0, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize*2)}, {x : 0, y : -Utils.edgeSize}, {x : Utils.edgeSize, y : -Utils.edgeSize}]
-    static line = [{x : 0, y : -(Utils.edgeSize)}, {x : Utils.edgeSize, y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*3), y : -(Utils.edgeSize)}]
-    static pyramid = [{x : Utils.edgeSize, y : -(Utils.edgeSize*2)}, {x : 0, y : -(Utils.edgeSize)}, {x : Utils.edgeSize, y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize)}]
-    static hookLeft = [{x : 0, y : -(Utils.edgeSize*2)}, {x : 0, y : -(Utils.edgeSize)}, {x : Utils.edgeSize, y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize)}]
-    static hookRight = [{x : (Utils.edgeSize*2), y : -(Utils.edgeSize*2)}, {x : 0, y : -(Utils.edgeSize)}, {x : Utils.edgeSize, y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize)}]
-    static zigzagLeft = [{x : 0, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize)}]
-    static zigzagRight = [{x : Utils.edgeSize, y : -(Utils.edgeSize*3)}, {x : (Utils.edgeSize*2), y : -(Utils.edgeSize*3)}, {x : 0, y : -(Utils.edgeSize*2)}, {x : Utils.edgeSize, y : -(Utils.edgeSize*2)}]
+    static cube = [{x : 0, y : 0}, {x : Utils.edgeSize, y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}]
+    static line = [{x : 0, y : 0}, {x : Utils.edgeSize, y : 0}, {x : (Utils.edgeSize*2), y : 0}, {x : (Utils.edgeSize*3), y : 0}]
+    static pyramid = [{x : Utils.edgeSize, y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
+    static hookLeft = [{x : 0, y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
+    static hookRight = [{x : (Utils.edgeSize*2), y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
+    static zigzagLeft = [{x : 0, y : 0}, {x : Utils.edgeSize, y : 0}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
+    static zigzagRight = [{x : Utils.edgeSize, y : 0}, {x : (Utils.edgeSize*2), y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}]
     
     static colors = ['#7DFA92', '#FFCF56', '#351431', '#7F0799', '#FF570A', '#3993DD', '#20A4F3']
    
@@ -51,7 +51,7 @@ class Canvas {
     static childCtx = this.child.getContext("2d")
     static scoreScreen = document.getElementById("scoreScreen")
     static scoreScreenCtx = this.scoreScreen.getContext('2d')
-    static canvasWidth = 275
+    static canvasWidth = 250
     static canvasHeight = 500
     static filledCoordsMap = new Map()
     static filledCoordsSorted = []
@@ -65,7 +65,7 @@ class Canvas {
     static currentColor
     static points = 0
     static level = 1
-    static startSpeed = 500
+    static startSpeed =  1000
     static SPEED = this.startSpeed
 
     static initializeFigure() {
@@ -81,12 +81,12 @@ class Canvas {
         const nextFigureCoords = this.changeNextFigureCoords()
         const figure = new Figure(newFigureCoords, nextFigureCoords, type, this.currentColor, this.nextColor)
         figure.initializeListener()
-        figure.moveDown(this.direction)
+        figure.moveDown()
     }
 
     static changeNextFigureCoords() {
         return JSON.parse(JSON.stringify(this.nextFigure)).map(coord => {
-           return {x : coord.x, y : coord.y += 80} 
+           return {x : coord.x, y : coord.y} 
         })
     }
 }
@@ -126,7 +126,7 @@ class Figure {
         if (this.direction !== 'up' && !this.pressTimer) {
             this.pressTimer = setTimeout(function() {
                 context.quickMoveInterval = context.direction === 'down' ? context.quickMove(20) : context.quickMove(40)
-            }, 100)
+            }, 50)
         }
     }
 
@@ -308,8 +308,9 @@ class Figure {
 
         const date = new Date
         if (!this.startAnimationTime) this.startAnimationTime = date.getTime()
-        Canvas.childCtx.clearRect(0,0,300,100)
-        Canvas.ctx.clearRect(0,0,300,500)
+
+        Canvas.childCtx.clearRect(0,0,130,100)
+        Canvas.ctx.clearRect(0,0,250,500)
         this.drawFallenFigures()
         this.drawNextFigure()
         this.drawScore()
@@ -351,15 +352,9 @@ class Figure {
         Canvas.ctx.globalAlpha = 1
         Canvas.ctx.font = 'bold 24px verdana'
         Canvas.ctx.fillStyle = 'white'
-        Canvas.ctx.fillText('GAME', 100, 220, 200)
-        Canvas.ctx.fillText('OVER', 100, 260, 200)
+        Canvas.ctx.fillText('GAME', 90, 220, 200)
+        Canvas.ctx.fillText('OVER', 90, 260, 200)
     }
-
-    // quickMove() {
-    //     return setInterval(() => {
-    //         this.manualTurn()
-    //     }, 20)
-    // }
 
     manualTurn() {
         this.activeFigure.forEach(figure => {
@@ -371,20 +366,16 @@ class Figure {
 
     changeFigureCoords(direction) {
         switch (direction) {
-            
             case 'down': if (!this.collisionCheck('down', this.activeFigure)) {
                 this.activeFigure.map(figure => figure.y += Utils.edgeSize)
             } 
             break
-
             case 'up': this.turnFigure(this.type)
             break
-
             case 'right': if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) {
                 this.activeFigure.map(figure => figure.x += Utils.edgeSize) 
             }            
             break
-
             case 'left':  if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) {
                 this.activeFigure.map(figure => figure.x -= Utils.edgeSize)
             } 
@@ -437,10 +428,14 @@ class Figure {
         return collision
     }
 
+    //intervalHolder
+
     tetrisCheck() {
+
         const allRows = {}
         let moveDownFor = 0
         let lowKey = []
+
         Array.from(Canvas.filledCoordsMap.keys()).forEach(coord => {
             if (allRows[coord.y] === undefined) allRows[coord.y] = [coord]
             else {
@@ -456,13 +451,25 @@ class Figure {
             }
         }
 
+        const moveDownArr = []
+
         Array.from(Canvas.filledCoordsMap.keys()).forEach(coord => {
-            if (coord.y !== Canvas.canvasHeight - Utils.edgeSize) {
-                lowKey.forEach(key => {
-                    if (coord.y < key) coord.y += Utils.edgeSize
-                })
-            }
+            lowKey.forEach(key => {
+                if (coord.y < key) {
+                    moveDownArr.push(coord)
+                } 
+            })
         })
+
+        const intervalId = setInterval(() => {
+            moveDownArr.forEach(coord => {
+                coord.y += 1; 
+            });
+        }, 5)
+
+        setTimeout(() => {
+            clearInterval(intervalId);
+        }, 125);
         
         Canvas.filledCoordsSorted = Array.from(Canvas.filledCoordsMap.keys()).sort((a,b) => a.y - b.y)
         Canvas.filledCoordsSortedStr = Canvas.filledCoordsSorted.map(coord => JSON.stringify(coord))
@@ -470,6 +477,7 @@ class Figure {
         Canvas.level = (Math.ceil(Canvas.points / 5000) === 0 ? 1 : Math.ceil(Canvas.points / 5000))
         Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
     }
+
 
     calculatePoints(moveDownFor) {
         let points
@@ -482,11 +490,3 @@ class Figure {
 }
 
 Canvas.initializeFigure()
-
-
-
-
-  
-
-
-
