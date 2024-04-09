@@ -57,8 +57,6 @@ class Canvas {
     static filledCoordsSorted = []
     static filledCoordsSortedStr = []
     static keyDirections = { 37: 'left', 38: 'up', 39: 'right', 40: 'down'}
-    static movingFigure
-    static direction = 'down'
     static currentFigure
     static nextFigure = FigureForms.getRandomFigure()
     static nextColor = FigureForms.getRandomColor()
@@ -96,11 +94,14 @@ class Figure {
     figurePosition = 'right'
     startAnimationTime = null
     createNewFigure = false
-    collision = false
     direction
     quickMoveInterval = null
-    animationId = null
     pressTimer
+    activeFigure
+    shadowFigure = []
+    nextFigureCoords
+    type
+    color
 
     constructor(newFigureCoords, nextFigureCoords, type, color, nextColor) {
         this.type = type
@@ -122,25 +123,24 @@ class Figure {
         else if (Canvas.keyDirections[eventKeyCode] === 'left') this.direction = 'left'
         else if (Canvas.keyDirections[eventKeyCode] === 'up') this.direction = 'up'
         else if (Canvas.keyDirections[eventKeyCode] === 'down') this.direction = 'down'
-        this.manualTurn()
+        this.changeFigureCoords(this.direction)
         if (this.direction !== 'up' && !this.pressTimer) {
             this.pressTimer = setTimeout(function() {
                 context.quickMoveInterval = context.direction === 'down' ? context.quickMove(20) : context.quickMove(40)
-            }, 50)
+            }, 25)
         }
     }
 
     quickMove(speed) {
         clearInterval(this.quickMoveInterval)
         return setInterval(() => {
-            this.manualTurn()
+            this.changeFigureCoords(this.direction)
         }, speed)
     }
 
     handleKeyUp() {
         clearInterval(this.quickMoveInterval)
         clearTimeout(this.pressTimer)
-        this.animationId = null
         this.quickMoveInterval = null
         this.pressTimer = null
     }
@@ -294,7 +294,7 @@ class Figure {
                     newPosition = 'right'
                 }
             }
-            if (!this.collisionCheck('turn', coordsCopy) && !this.hitWallCheck('turn', coordsCopy)) {
+            if (!this.collisionCheck(coordsCopy) && !this.hitWallCheck('turn', coordsCopy)) {
                 for (let i = 0; i < coordsCopy.length; i++) {
                     this.activeFigure[i].x = coordsCopy[i].x
                     this.activeFigure[i].y = coordsCopy[i].y
@@ -304,32 +304,35 @@ class Figure {
         }
     }
 
+    redrawCanvas() {
+        Canvas.childCtx.clearRect(0,0,130,100)
+        this.drawNextFigure()
+        Canvas.ctx.clearRect(0,0,250,500)
+        this.drawFallenFigures()
+        this.drawScore()
+        this.drawFigure()
+        this.drawShadowFigure()
+    }
+
     moveDown() {
 
         const date = new Date
-        if (!this.startAnimationTime) this.startAnimationTime = date.getTime()
+        this.redrawCanvas()
 
-        Canvas.childCtx.clearRect(0,0,130,100)
-        Canvas.ctx.clearRect(0,0,250,500)
-        this.drawFallenFigures()
-        this.drawNextFigure()
-        this.drawScore()
-        this.drawFigure()
+        if (!this.startAnimationTime) {
+            this.startAnimationTime = date.getTime()
+        } 
 
         if (date.getTime() - this.startAnimationTime > Canvas.SPEED) {
-            this.collisionCheck('down', this.activeFigure)
-            if (this.collision) {
+            if (this.collisionCheck(this.activeFigure)) {
                 this.createNewFigure = true
             } else {
                 this.startAnimationTime = null
                 this.changeFigureCoords('down') 
-                requestAnimationFrame(() => this.moveDown())
             }
         }
 
-        if (!this.createNewFigure) {
-            requestAnimationFrame(() => this.moveDown())
-        } else {
+        if (this.createNewFigure) {
             if (this.activeFigure[0].y <= 0) {
                 this.gameOver()
             } else {
@@ -342,6 +345,8 @@ class Figure {
                 Canvas.initializeFigure()
                 this.tetrisCheck()
             }
+        } else {
+            requestAnimationFrame(() => this.moveDown())
         }
     }
 
@@ -356,34 +361,53 @@ class Figure {
         Canvas.ctx.fillText('OVER', 90, 260, 200)
     }
 
-    manualTurn() {
-        this.activeFigure.forEach(figure => {
-            Canvas.ctx.clearRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize) 
-        })
-        this.changeFigureCoords(this.direction)
-        this.drawFigure()
-    }
-
     changeFigureCoords(direction) {
         switch (direction) {
-            case 'down': if (!this.collisionCheck('down', this.activeFigure)) {
+            case 'down': if (!this.collisionCheck(this.activeFigure)) {
                 this.activeFigure.map(figure => figure.y += Utils.edgeSize)
             } 
             break
             case 'up': this.turnFigure(this.type)
             break
-            case 'right': if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) {
+            case 'right': if (!this.hitWallCheck(direction, this.activeFigure)) {
                 this.activeFigure.map(figure => figure.x += Utils.edgeSize) 
             }            
             break
-            case 'left':  if (!this.hitWallCheck(direction, this.activeFigure) && !this.collision) {
+            case 'left':  if (!this.hitWallCheck(direction, this.activeFigure)) {
                 this.activeFigure.map(figure => figure.x -= Utils.edgeSize)
             } 
             break
         }
     }
 
-    collisionCheck(direction, coords) {
+    drawShadowFigure() {
+        const shadowCoords = this.calculateShadowCoords();
+        if (shadowCoords && shadowCoords[0]) {
+            const notCollsition = this.activeFigure[0].y < shadowCoords[0].y - Utils.edgeSize
+            if (notCollsition) {
+                shadowCoords.forEach(coord => {
+                    Canvas.ctx.fillStyle = 'rgba(233, 233, 233, 0.7)';
+                    Canvas.ctx.fillRect(coord.x, coord.y, Utils.edgeSize, Utils.edgeSize);
+                });
+            }
+        }
+    }
+
+    calculateShadowCoords() {
+        let shadowCoords
+        if (this.activeFigure) {
+            shadowCoords = [];
+            const activeFigureCopy = JSON.parse(JSON.stringify(this.activeFigure));
+    
+            while (!this.collisionCheck(activeFigureCopy)) {
+                activeFigureCopy.forEach(coord => (coord.y += Utils.edgeSize));
+                shadowCoords = activeFigureCopy.map(coord => ({ x: coord.x, y: coord.y }));
+            }
+        }
+        return shadowCoords;
+    }
+
+    collisionCheck(coords) {
         let collision
         const filledCoords = Canvas.filledCoordsSorted
         for (let i = 0; i < coords.length; i++) {
@@ -399,13 +423,7 @@ class Figure {
                 break 
             }
         }
-        if (collision) {
-            if (direction === 'down') {
-                this.collision = true
-            } 
-            return true
-        } 
-        return false
+        return collision
     }
 
     hitWallCheck(direction, coords) {
@@ -427,8 +445,6 @@ class Figure {
         }
         return collision
     }
-
-    //intervalHolder
 
     tetrisCheck() {
 
