@@ -4,6 +4,8 @@ class Utils {
     static getRandomStartCoord() {
         return this.startPositions[Math.floor(Math.random() * this.startPositions.length)]
     }
+    quickMoveSound
+    removeLinesSound
 }
 
 class FigureForms {
@@ -129,12 +131,39 @@ class Figure {
                 context.quickMoveInterval = context.direction === 'down' ? context.quickMove(20) : context.quickMove(40)
             }, 25)
         }
+        //this.playQuickMoveAudio()
+    }
+
+    // playQuickMoveAudio() {
+    //     if (Utils.quickMoveSound) {
+    //         Utils.quickMoveSound.stop();
+    //     }
+    //     Utils.quickMoveSound = new Howl({
+    //         src: ['sounds/quick.wav'],
+    //         volume : .4
+    //     });
+    //     Utils.quickMoveSound.play();
+    // }
+
+    playRemoveLinesAudio() {
+        if (Utils.removeLinesSound) {
+            Utils.removeLinesSound
+        }
+        Utils.removeLinesSound = new Howl({
+            src: ['sounds/quick_5.wav'],
+            volume : 1,
+            rate : 1
+        });
+        Utils.removeLinesSound.play();
     }
 
     quickMove(speed) {
         clearInterval(this.quickMoveInterval)
         return setInterval(() => {
             this.changeFigureCoords(this.direction)
+            if (this.direction !== 'down') {
+                //this.playQuickMoveAudio()
+            }
         }, speed)
     }
 
@@ -486,14 +515,17 @@ class Figure {
         setTimeout(() => {
             clearInterval(intervalId);
         }, 125);
-        
+
+        if (moveDownArr.length > 0) {
+            this.playRemoveLinesAudio()
+        }
+
         Canvas.filledCoordsSorted = Array.from(Canvas.filledCoordsMap.keys()).sort((a,b) => a.y - b.y)
         Canvas.filledCoordsSortedStr = Canvas.filledCoordsSorted.map(coord => JSON.stringify(coord))
         Canvas.points += this.calculatePoints(moveDownFor)
         Canvas.level = (Math.ceil(Canvas.points / 5000) === 0 ? 1 : Math.ceil(Canvas.points / 5000))
         Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
     }
-
 
     calculatePoints(moveDownFor) {
         let points
