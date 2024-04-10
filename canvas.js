@@ -147,7 +147,7 @@ class Figure {
 
     playRemoveLinesAudio() {
         if (Utils.removeLinesSound) {
-            Utils.removeLinesSound
+            Utils.removeLinesSound.stop()
         }
         Utils.removeLinesSound = new Howl({
             src: ['sounds/quick_5.wav'],
