@@ -759,9 +759,7 @@ function startGame() {
     Canvas.filledCoordsMap.clear()
     Canvas.initializeNewFigure()
     Canvas.redrawCanvas()
-    setTimeout(() => {
-        MusicPlayer.playSoundTrack(0)
-    }, 1000) 
+    MusicPlayer.playSoundTrack(0) 
 }
 
 let startXCoord
