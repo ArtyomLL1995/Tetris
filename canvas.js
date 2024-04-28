@@ -805,7 +805,6 @@ class MoveHandler {
             Math.abs(currentYCoord - this.startYCoord) < 10
         ) {
             Canvas.currentFigure?.changeFigureCoords('up')
-            MusicPlayer.playSoundTrack(0) 
         } else {
             console.log('long touch')
         }
