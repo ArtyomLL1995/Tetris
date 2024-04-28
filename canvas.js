@@ -140,7 +140,6 @@ class MusicPlayer {
         this.soundTrack?.stop()
         this.soundTrack = new Howl({
             src: [this.music[index]],
-            html5: true,
             volume : .5,
             onend : () => {
                 if (index === this.music.length-1) {
@@ -798,7 +797,13 @@ class MoveHandler {
     static handleTouchEnd(event) {
         const date = new Date()
         const currentTime = date.getTime()
-        if (currentTime - this.touchStartTime < 200) {
+        const currentXCoord = event.changedTouches[0].pageX
+        const currentYCoord = event.changedTouches[0].pageY 
+
+        if (currentTime - this.touchStartTime < 150             && 
+            Math.abs(currentXCoord - this.startXCoord) < 10     &&
+            Math.abs(currentYCoord - this.startYCoord) < 10
+        ) {
             Canvas.currentFigure?.changeFigureCoords('up')
             MusicPlayer.playSoundTrack(0) 
         } else {
