@@ -32,7 +32,6 @@ body {
     transform: translate(-50%, -50%);
 }
 
-
 #mainScreen { 
     border-right: 0.5px solid rgb(215, 215, 215);  
     border-left: 0.5px solid rgb(215, 215, 215);  
@@ -70,5 +69,26 @@ body {
     cursor: pointer; 
     border: none; 
     display: inline-block;
+    font-family: Jersey_25;
+}
+
+.game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    display: none;
+}
+
+.game-over-screen span {
+    color: white;
+    font-size: 25px; 
     font-family: Jersey_25;
 }

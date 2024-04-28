@@ -26,24 +26,6 @@ class Utils {
         }
     }
 
-    static music = [
-        './Music/Lawrence Walther & Gelch - Sunset Lookers.mp3',
-        './Music/Azido 88, Lawrence Walther - Terrapin Groove.mp3',
-        './Music/softy, Lawrence Walther - Park Bench.mp3',
-        './Music/Tibeauthetraveler x Lawrence Walther - Memory Lane.mp3',
-        './Music/softy, Lawrence Walther - Where We Met.mp3',
-        './Music/softy, Lawrence Walther - Footsteps in the Snow.mp3',
-        './Music/let-it-go.mp3',
-        './Music/sunset-vibes.mp3',
-        './Music/fat-chillin.mp3',
-        './Music/retro-hip-hop.mp3',
-        './Music/lofi-girl-dreams.mp3',
-        './Music/the-best-jazz-club-in-new-orleans.mp3',
-        './Music/ciudades.mp3',
-        './Music/galaxy-echo.mp3',
-        './Music/jazzy-background-beat.mp3'
-    ]
-
     static backgroundImages = [
         './Images/1.jpeg', 
         './Images/2.jpeg', 
@@ -52,8 +34,7 @@ class Utils {
         './Images/5.jpeg', 
         './Images/6.jpeg',
         './Images/8.jpeg', 
-        './Images/9.jpeg', 
-        './Images/12.jpeg', 
+        './Images/9.jpeg',  
         './Images/13.jpeg', 
         './Images/14.jpeg', 
         './Images/19.jpeg',
@@ -74,13 +55,9 @@ class Utils {
         './Images/38.jpeg', 
         './Images/39.jpeg', 
         './Images/40.jpeg', 
-        './Images/41.jpeg', 
-        './Images/42.jpeg'
+        './Images/41.jpeg'
     ]
 
-    static soundTrack
-    static quickMoveSound
-    static removeLinesSound
     static canvasWidth = this.edgeSize * 10
     static canvasHeight = this.edgeSize * 20
 
@@ -106,36 +83,105 @@ class Utils {
         document.body.style.backgroundImage = `url(${url})`
         document.body.style.backgroundSize = 'cover'
     }
+
+    static changeOpacity(inputString, newOpacity) {
+        const rgbaRegex = /^rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)$/;
+        const match = inputString.match(rgbaRegex);
+        const red = match[1];
+        const green = match[2];
+        const blue = match[3];
+        const modifiedString = 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + newOpacity + ')';
+        return modifiedString;
+    }
 }
 
-class musicPlayer {
-    static initializeMusic(index) {
-        Utils.soundTrack?.stop()
-        Utils.soundTrack = new Howl({
-            src: [Utils.music[index]],
+class MusicPlayer {
+
+    static music = [
+        './Music/Lawrence Walther & Gelch - Sunset Lookers.mp3',
+        './Music/Azido 88, Lawrence Walther - Terrapin Groove.mp3',
+        './Music/softy, Lawrence Walther - Park Bench.mp3',
+        './Music/Tibeauthetraveler x Lawrence Walther - Memory Lane.mp3',
+        './Music/softy, Lawrence Walther - Where We Met.mp3',
+        './Music/softy, Lawrence Walther - Footsteps in the Snow.mp3',
+        './Music/let-it-go.mp3',
+        './Music/sunset-vibes.mp3',
+        './Music/fat-chillin.mp3',
+        './Music/retro-hip-hop.mp3',
+        './Music/lofi-girl-dreams.mp3',
+        './Music/the-best-jazz-club-in-new-orleans.mp3',
+        './Music/ciudades.mp3',
+        './Music/galaxy-echo.mp3',
+        './Music/jazzy-background-beat.mp3',
+        './Music/80x-lo-fi-jazz.mp3',
+        './Music/ogi-feel-the-beat-chillest.mp3',
+        './Music/seduction-jazz.mp3',
+        './Music/once-in-paris.mp3',
+        './Music/quiet-stars.mp3',
+        './Music/phonk.mp3'
+    ]
+
+    static soundTrack
+    static quickMoveSound
+    static removeLinesSound
+    static fallSound
+
+    static playSoundTrack(index) {
+        this.soundTrack?.stop()
+        this.soundTrack = new Howl({
+            src: [this.music[index]],
             html5: true,
             volume : .5,
             onend : () => {
-                if (index === Utils.music.length-1) {
+                if (index === this.music.length-1) {
                     setTimeout(() => {
-                        musicPlayer.initializeMusic(0)
+                        this.playSoundTrack(0)
                     }, 1000)
                 } else {
                     setTimeout(() => {
-                        musicPlayer.initializeMusic(index+=1)
+                        this.playSoundTrack(index+=1)
                     }, 1000)
                 }
             }
         });
 
         const musicNameContainer = document.querySelector('.music-name')
-        let songPath = Utils.music[index]
+        let songPath = this.music[index]
         songPath = songPath.substring('./Music/'.length);
         songPath = songPath.slice(0, -4);
         musicNameContainer.textContent = songPath
 
-        Utils.soundTrack.play()
+        this.soundTrack.play()
     } 
+
+    static playFallSound() {
+        this.fallSound?.stop()
+        this.fallSound = new Howl({
+            src: ['sounds/punch.wav'],
+            volume: 1
+        })
+        this.fallSound.play()
+    }
+
+    static playQuickMoveAudio() {
+        this.quickMoveSound?.stop();
+        this.quickMoveSound = new Howl({
+            src: ['sounds/quick_10.mp3'],
+            volume : .1
+        });
+        this.quickMoveSound.play();
+    }
+
+    static playRemoveLinesAudio() {
+        this.removeLinesSound?.stop()
+        this.removeLinesSound = new Howl({
+            src: ['sounds/quick_5.wav'],
+            volume : 1,
+            rate : 1
+        });
+        this.removeLinesSound.play();
+    }
+
 }
 
 class FigureForms {
@@ -147,8 +193,19 @@ class FigureForms {
     static hookRight = [{x : (Utils.edgeSize*2), y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
     static zigzagLeft = [{x : 0, y : 0}, {x : Utils.edgeSize, y : 0}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
     static zigzagRight = [{x : Utils.edgeSize, y : 0}, {x : (Utils.edgeSize*2), y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}]
+
+    static colorOpacity = 1
     
-    static colors = ['#7DFA92', '#FFCF56', '#7CE577', '#7F0799', '#FF570A', '#3993DD', '#20A4F3', '#FF0080']
+    static colors = [
+        'rgba(125, 250, 146, 1)', 
+        'rgba(255, 207, 86, 1)', 
+        'rgba(124, 229, 119, 1)', 
+        'rgba(127, 7, 153, 1)', 
+        'rgba(255, 87, 10, 1)', 
+        'rgba(57, 147, 221, 1)', 
+        'rgba(32, 164, 243, 1)', 
+        'rgba(255, 0, 128, 1)'
+    ]
    
     static allFiguresMap = new Map()
 
@@ -183,10 +240,8 @@ class Canvas {
     static childCtx = this.child.getContext("2d")
     static scoreScreen = document.getElementById("scoreScreen")
     static scoreScreenCtx = this.scoreScreen.getContext('2d')
-    static canvasWidth = Utils.canvasWidth
-    static canvasHeight = Utils.canvasHeight
     static filledCoordsMap = new Map()
-    static keyDirections = { 37: 'left', 38: 'up', 39: 'right', 40: 'down'}
+    static keyDirections = { 37: 'left', 38: 'up', 39: 'right', 40: 'down', 32: 'space' }
     static currentFigureCoords
     static nextFigureCoords = FigureForms.getRandomFigure()
     static nextColor = FigureForms.getRandomColor()
@@ -196,8 +251,9 @@ class Canvas {
     static startSpeed =  1000
     static SPEED = this.startSpeed
     static currentFigure
+    static canvasRequestAnimationFrameId
 
-    static initializeFigure() {
+    static initializeNewFigure() {
 
         if (this.currentFigure) {
             this.currentFigure.removeListeners()
@@ -217,24 +273,61 @@ class Canvas {
         const newFigureCoords = this.currentFigureCoords.map(obj => {
             return {x : obj.x + startOffset, y: obj.y}
         })
+
         this.currentFigure = new Figure(newFigureCoords, this.nextFigureCoords, type, this.currentColor, this.nextColor)
-        this.currentFigure.initializeListener()
-        this.currentFigure.moveDown()
-        this.currentFigure.calculateShadowCoords()
-        Canvas.childCtx.clearRect(0,0,130,100)
-        this.currentFigure.drawNextFigure()
+
+        if (this.currentFigure.collisionCheck(newFigureCoords)) {
+            console.log('game over')
+            this.gameOver()
+        } else {
+            this.currentFigure.initializeListener()
+            this.currentFigure.moveDown()
+            this.currentFigure.calculateShadowCoords()
+            Canvas.childCtx.clearRect(0,0,130,100)
+            this.currentFigure.drawNextFigure()
+        }
+    }
+
+    static drawFallenFigures() {
+        Array.from(this.filledCoordsMap.keys()).forEach(figure => {
+            this.ctx.fillStyle = this.filledCoordsMap.get(figure)
+            this.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
+        })
+    }
+
+    static drawScore() {
+        this.scoreScreenCtx.clearRect(0,0,200,200)
+        this.scoreScreenCtx.font = '30px Jersey_25'
+        this.scoreScreenCtx.fillStyle = 'white'
+        this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20, 200)
+        this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60, 200)
+    }
+
+    static redrawCanvas() {
+        this.ctx.clearRect(0,0, Utils.canvasWidth, Utils.canvasHeight)
+        this.drawFallenFigures()
+        this.drawScore()
+        this.currentFigure.drawFigure()
+        this.currentFigure.drawShadowFigure()
+        this.canvasRequestAnimationFrameId = requestAnimationFrame(() => this.redrawCanvas())
+    }
+
+    static gameOver() {
+        document.querySelector('.game-over-screen').style.display = 'flex'
     }
 }
 
 class Figure {
 
     figurePosition = 'right'
-    startAnimationTime
-    createNewFigure = false
+    startMoveDownAnimationTime
+    startChangeColorAnimationTime
     direction
     quickMoveInterval
     requestAnimationFrameId
+    createNewFigureTimeout
     pressTimer
+    shadowFigure = []
     activeFigure
     nextFigureCoords
     type
@@ -264,48 +357,36 @@ class Figure {
    
     moveFigure(event) {
         const context = this
-        const eventKeyCode = event.keyCode
-        if (Canvas.keyDirections[eventKeyCode] === 'right') this.direction = 'right'
-        else if (Canvas.keyDirections[eventKeyCode] === 'left') this.direction = 'left'
-        else if (Canvas.keyDirections[eventKeyCode] === 'up') this.direction = 'up'
-        else if (Canvas.keyDirections[eventKeyCode] === 'down') this.direction = 'down'
+        const eventKeyCode = Canvas.keyDirections[event.keyCode]
+        if (eventKeyCode === 'right') this.direction = 'right'
+        else if (eventKeyCode === 'left') this.direction = 'left'
+        else if (eventKeyCode === 'up') this.direction = 'up'
+        else if (eventKeyCode === 'down') this.direction = 'down'
+        else if (eventKeyCode === 'space') this.direction = 'down'
 
-        if (this.changeFigureCoords(this.direction)) {
-            this.playQuickMoveAudio()
+        if (eventKeyCode !== 'space' && this.changeFigureCoords(this.direction)) {
+            MusicPlayer.playQuickMoveAudio()
         }
-        
-        if (this.direction !== 'up' && !this.pressTimer) {
+        if (eventKeyCode !== 'up' && !this.pressTimer) {
             this.pressTimer = setTimeout(function() {
-                context.quickMoveInterval = context.direction === 'down' ? context.quickMove(20) : context.quickMove(40)
+                if (eventKeyCode === 'down') {
+                    context.quickMoveInterval = context.quickMove(20) 
+                } else if (eventKeyCode === 'space') {     
+                    context.quickMoveInterval = context.quickMove(5) 
+                    context.shadowFigure = []
+                    MusicPlayer.playFallSound()
+                } else if (eventKeyCode === 'right' || eventKeyCode === 'left') {
+                    context.quickMoveInterval = context.quickMove(40) 
+                }
             }, 25)
         }
-       
-    }
-
-    playQuickMoveAudio() {
-        Utils.quickMoveSound?.stop();
-        Utils.quickMoveSound = new Howl({
-            src: ['sounds/quick_10.mp3'],
-            volume : .1
-        });
-        Utils.quickMoveSound.play();
-    }
-
-    playRemoveLinesAudio() {
-        Utils.removeLinesSound?.stop()
-        Utils.removeLinesSound = new Howl({
-            src: ['sounds/quick_5.wav'],
-            volume : 1,
-            rate : 1
-        });
-        Utils.removeLinesSound.play();
     }
 
     quickMove(speed) {
         clearInterval(this.quickMoveInterval)
         return setInterval(() => {
             if (this.changeFigureCoords(this.direction) && this.direction !== 'down') {
-                this.playQuickMoveAudio()
+                MusicPlayer.playQuickMoveAudio()
             }
         }, speed)
     }
@@ -315,14 +396,6 @@ class Figure {
         clearTimeout(this.pressTimer)
         this.quickMoveInterval = null
         this.pressTimer = null
-    }
-
-    drawScore() {
-        Canvas.scoreScreenCtx.clearRect(0,0,200,200)
-        Canvas.scoreScreenCtx.font = '30px Jersey_25'
-        Canvas.scoreScreenCtx.fillStyle = 'white'
-        Canvas.scoreScreenCtx.fillText('LEVEL ' + Canvas.level, 0, 20, 200)
-        Canvas.scoreScreenCtx.fillText('Points ' + Canvas.points, 0, 60, 200)
     }
 
     drawFigure() {
@@ -339,17 +412,16 @@ class Figure {
         })
     }
 
-    drawFallenFigures() {
-        Array.from(Canvas.filledCoordsMap.keys()).forEach(figure => {
-            Canvas.ctx.fillStyle = Canvas.filledCoordsMap.get(figure)
-            Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
-        })
+    drawShadowFigure() {
+        if (this.shadowFigure[0]?.y > this.activeFigure[0]?.y + Utils.edgeSize) {
+            this.shadowFigure.forEach(coord => {
+                Canvas.ctx.fillStyle = 'rgba(225, 215, 220, 0.5)';
+                Canvas.ctx.fillRect(coord.x, coord.y, Utils.edgeSize, Utils.edgeSize);
+            });
+        } 
     }
     
-    turnFigure(type) {
-        const coordsCopy = this.activeFigure.map(figurepart => {
-            return {...figurepart}
-        })
+    turnFigure(type, coordsCopy) {
         if (coordsCopy.length > 0) {
             let newPosition
             if (type === 'line') {
@@ -470,110 +542,120 @@ class Figure {
             }
             if (!this.collisionCheck(coordsCopy)) {
                 this.figurePosition = newPosition
-                this.assignActiveFigure(coordsCopy)
+                this.activeFigure = [...coordsCopy]
                 this.calculateShadowCoords()
             }
         }
     }
 
-    assignActiveFigure(coordsCopy) {
-        for (let i = 0; i < coordsCopy.length; i++) {
-            this.activeFigure[i].x = coordsCopy[i].x
-            this.activeFigure[i].y = coordsCopy[i].y
+    changeColorAnimation() {
+
+        const duration = 500
+        const gap = 0.5
+        const date = new Date
+
+        let opacity = 1
+
+        if (!this.startChangeColorAnimationTime) {
+            this.startChangeColorAnimationTime = date.getTime()
+        }
+
+        const elapsedTime = date.getTime() - this.startChangeColorAnimationTime;
+
+        if (elapsedTime <= duration / 2) {
+            opacity = 1 - (0.9 * elapsedTime) / (duration / 2)
+            if (opacity < gap) {
+                this.color = Utils.changeOpacity(this.color, gap)
+            } else {
+                this.color = Utils.changeOpacity(this.color, opacity)
+            }
+        } else {
+            opacity = 0.1 + (0.9 * (elapsedTime - duration / 2)) / (duration / 2)
+            if (opacity < gap) {
+                this.color = Utils.changeOpacity(this.color, gap)
+            } else {
+                this.color = Utils.changeOpacity(this.color, opacity)
+            }
+        }
+
+        if (elapsedTime < duration) {
+            requestAnimationFrame(() => this.changeColorAnimation())
+        } else {
+            this.startChangeColorAnimationTime = null;
         }
     }
 
-    redrawCanvas() {
-        Canvas.ctx.clearRect(0,0, Canvas.canvasWidth, Canvas.canvasHeight)
-        this.drawFallenFigures()
-        this.drawScore()
-        this.drawFigure()
-        this.drawShadowFigure()
-    }
+    createNewFigureTimeOutId
 
     moveDown() {
 
         const date = new Date
-        this.redrawCanvas()
 
-        if (!this.startAnimationTime) {
-            this.startAnimationTime = date.getTime()
+        if (!this.startMoveDownAnimationTime) {
+            this.startMoveDownAnimationTime = date.getTime()
         } 
 
-        if (date.getTime() - this.startAnimationTime > Canvas.SPEED) {
-            if (!this.changeFigureCoords('down')) {
-                this.createNewFigure = true
+        if (date.getTime() - this.startMoveDownAnimationTime > Canvas.SPEED) {
+            if (!this.changeFigureCoords('down') && !this.createNewFigureTimeOutId) {
+                this.createNewFigureTimeOutId = setTimeout(() => this.createNewFigure(), 500) 
+                if (this.allowChangeColor) {
+                    this.changeColorAnimation()
+                    this.allowChangeColor = false
+                }
             } else {
-                this.startAnimationTime = null
+                this.startMoveDownAnimationTime = null
             }
         }
+        this.requestAnimationFrameId = requestAnimationFrame(() => this.moveDown())
+    }
 
-        if (this.createNewFigure) {
-            if (this.activeFigure[0].y <= 0) {
-                this.gameOver()
-            } else {
+    createNewFigure() {
+        if (this.activeFigure) {
+            if (!this.changeFigureCoords('down')) {
                 this.activeFigure.forEach(figure => {
                     Canvas.filledCoordsMap.set(figure, this.color)
                 })
                 this.activeFigure.length = 0
-                this.tetrisCheck()
-                Canvas.initializeFigure()
+                this.tetrisCheck() 
+            } else {
+                this.allowChangeColor = true
+                this.startChangeColorAnimationTime = null
+                this.startMoveDownAnimationTime = null
+                this.createNewFigureTimeOutId = null
             }
-        } else {
-            this.requestAnimationFrameId = requestAnimationFrame(() => this.moveDown())
         }
-    }
-
-    gameOver() {
-        Canvas.ctx.globalAlpha = 0.5
-        Canvas.ctx.fillStyle = 'grey'
-        Canvas.ctx.fillRect(0, 0, Canvas.canvasWidth, Canvas.canvasHeight)
-        Canvas.ctx.globalAlpha = 1
-        Canvas.ctx.font = 'bold 24px Jersey'
-        Canvas.ctx.fillStyle = 'white'
-        Canvas.ctx.fillText('GAME', 90, 220, 200)
-        Canvas.ctx.fillText('OVER', 90, 260, 200)
     }
 
     changeFigureCoords(direction) {
         let allowChangeCoords
-        const coordsCopy = this.activeFigure.map(figure => {
-            return {...figure}
-        })
-        switch (direction) {
-            case 'down': 
-                coordsCopy.forEach(figure => figure.y += Utils.edgeSize)
-            break
-            case 'up': 
-                this.turnFigure(this.type)
-            break
-            case 'right': 
-                coordsCopy.forEach(figure => figure.x += Utils.edgeSize)      
-            break
-            case 'left':  
-                coordsCopy.forEach(figure => figure.x -= Utils.edgeSize)  
-            break
-        }
-        if (!this.collisionCheck(coordsCopy) && direction !== 'up') {
-            this.assignActiveFigure(coordsCopy)
-            allowChangeCoords = true
-        }
-        if (direction === 'left' || direction === 'right') {
-            this.calculateShadowCoords()
+        if (this.activeFigure) {
+            const coordsCopy = this.activeFigure.map(figure => {
+                return {...figure}
+            })
+            switch (direction) {
+                case 'down': 
+                    coordsCopy.forEach(figure => figure.y += Utils.edgeSize)
+                break
+                case 'up': 
+                    this.turnFigure(this.type, coordsCopy)
+                break
+                case 'right': 
+                    coordsCopy.forEach(figure => figure.x += Utils.edgeSize)      
+                break
+                case 'left':  
+                    coordsCopy.forEach(figure => figure.x -= Utils.edgeSize)  
+                break
+            }
+            if (!this.collisionCheck(coordsCopy) && direction !== 'up') {
+                this.activeFigure = [...coordsCopy]
+                allowChangeCoords = true
+            }
+            if (direction === 'left' || direction === 'right') {
+                this.calculateShadowCoords()
+            }
         }
         return allowChangeCoords
     }
-
-    drawShadowFigure() {
-        if (this.shadowFigure[0]?.y > this.activeFigure[0].y + Utils.edgeSize) {
-            this.shadowFigure.forEach(coord => {
-                Canvas.ctx.fillStyle = 'rgba(225, 215, 220, 0.5)';
-                Canvas.ctx.fillRect(coord.x, coord.y, Utils.edgeSize, Utils.edgeSize);
-            });
-        } 
-    }
-
-    shadowFigure = []
 
     calculateShadowCoords() {
         const shadowCoords = this.activeFigure.map(figure => {
@@ -588,22 +670,37 @@ class Figure {
         this.shadowFigure = shadowCoords
     }
 
+    allowChangeColor = true
+
     collisionCheck(nextFigurePositions) {
+        let collision
         const filledCoords = Array.from(Canvas.filledCoordsMap.keys())
         for (let i = 0; i < nextFigurePositions.length; i++) {
-            if (nextFigurePositions[i].y > Canvas.canvasHeight - Utils.edgeSize) {
-                return true
-            } else if (nextFigurePositions[i].x < 0 || nextFigurePositions[i].x > Canvas.canvasWidth - Utils.edgeSize) {
-                return true
+            if (collision) break
+            if (nextFigurePositions[i].y > Utils.canvasHeight - Utils.edgeSize) {
+                collision = true
+                break
+            } else if (nextFigurePositions[i].x < 0 || nextFigurePositions[i].x > Utils.canvasWidth - Utils.edgeSize) {
+                collision = true
+                break
             } else if (filledCoords.length > 0) {
                 for (let j = 0; j < filledCoords.length; j++) {
                     if (filledCoords[j].y === nextFigurePositions[i].y && 
                         filledCoords[j].x === nextFigurePositions[i].x) {
-                        return true
+                        collision = true
+                        break
                     }
                 }
             }
         }
+        if (collision && this.direction === 'down' && this.allowChangeColor) {
+            this.allowChangeColor = false
+            this.changeColorAnimation()
+            if (!this.createNewFigureTimeOutId) {
+                this.createNewFigureTimeOutId = setTimeout(() => this.createNewFigure(), 500) 
+            }
+        }
+        return collision
     }
 
     tetrisCheck() {
@@ -620,7 +717,7 @@ class Figure {
         })
 
         for (const [key, value] of Object.entries(allRows)) {
-            if (value.length === Canvas.canvasWidth / Utils.edgeSize) {
+            if (value.length === Utils.canvasWidth / Utils.edgeSize) {
                 value.forEach(v => Canvas.filledCoordsMap.delete(v))
                 lowKey.push(key)
                 moveDownFor += Utils.edgeSize
@@ -655,12 +752,17 @@ class Figure {
                         coord.y += Utils.edgeSize - coord.y % Utils.edgeSize
                     }
                 });
+                Canvas.initializeNewFigure()
             }, totalFuntTime);
-            this.playRemoveLinesAudio()
+            MusicPlayer.playRemoveLinesAudio()
+        } else {
+            Canvas.initializeNewFigure()
         }
+
         Canvas.points += this.calculatePoints(moveDownFor)
         Canvas.level = (Math.ceil(Canvas.points / 5000) === 0 ? 1 : Math.ceil(Canvas.points / 5000))
         Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
+
     }
 
     calculatePoints(moveDownFor) {
@@ -674,11 +776,13 @@ class Figure {
 }
 
 function startGame() {
-    //Canvas.createDemoFallenFigures()
-    Utils.shuffle(Utils.music)
-    Canvas.initializeFigure()
+    document.querySelector('.game-over-screen').style.display = 'none'
+    Utils.shuffle(MusicPlayer.music)
+    Canvas.filledCoordsMap.clear()
+    Canvas.initializeNewFigure()
+    Canvas.redrawCanvas()
     setTimeout(() => {
-        musicPlayer.initializeMusic(0)
+        MusicPlayer.playSoundTrack(0)
     }, 1000) 
 }
 
