@@ -768,7 +768,7 @@ let startXCoord
 let startYCoord
 let touchStartTime
 let prevTouchMoveCoord
-const moveGap = 20
+const moveGap = 40
 const moveDownGap = 10
 
 function handleTouchStart(event) {
