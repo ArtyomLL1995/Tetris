@@ -764,5 +764,11 @@ function startGame() {
     }, 1000) 
 }
 
+function handleClick() {
+    Canvas.currentFigure.changeFigureCoords('up')
+}
+
+document.addEventListener('click', handleClick)
+
 Utils.setBackgroundUrl()
 Utils.setCanvasSize()
