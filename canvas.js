@@ -764,11 +764,50 @@ function startGame() {
     }, 1000) 
 }
 
-function handleClick() {
-    Canvas.currentFigure.changeFigureCoords('up')
+let startXCoord
+let startYCoord
+let touchStartTime
+let prevTouchMoveCoord
+const moveGap = 20
+
+function handleTouchStart(event) {
+    startXCoord = event.changedTouches[0].pageX
+    startYCoord = event.changedTouches[0].pageY
+    const date = new Date()
+    touchStartTime = date.getTime()
 }
 
-document.addEventListener('click', handleClick)
+function handleTouchMove(event) {
+    const currentXCoord = event.changedTouches[0].pageX
+    const currentYCoord = event.changedTouches[0].pageY
+    if (currentXCoord - startXCoord > moveGap) {
+        Canvas.currentFigure?.changeFigureCoords('right')
+        MusicPlayer.playQuickMoveAudio()
+        startXCoord = currentXCoord
+    } else if (currentXCoord - startXCoord < -moveGap) {
+        Canvas.currentFigure?.changeFigureCoords('left')
+        MusicPlayer.playQuickMoveAudio()
+        startXCoord = currentXCoord
+    } else if (currentYCoord - startYCoord > moveGap) {
+        Canvas.currentFigure?.changeFigureCoords('down')
+        MusicPlayer.playQuickMoveAudio()
+        startYCoord = currentYCoord
+    }
+}
+
+function handleTouchEnd(event) {
+    const date = new Date()
+    const currentTime = date.getTime()
+    if (currentTime - touchStartTime < 200) {
+        Canvas.currentFigure?.changeFigureCoords('up')
+    } else {
+        console.log('long touch')
+    }
+}
+
+document.addEventListener('touchstart', handleTouchStart)
+document.addEventListener('touchmove', handleTouchMove)
+document.addEventListener('touchend', handleTouchEnd)
 
 Utils.setBackgroundUrl()
 Utils.setCanvasSize()
