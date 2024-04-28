@@ -768,7 +768,7 @@ class MoveHandler {
     static startYCoord
     static touchStartTime
     static prevTouchMoveCoord
-    static moveGap = 40
+    static moveGap = 30
     static moveDownGap = 10
     
     static handleTouchStart(event) {
@@ -800,6 +800,7 @@ class MoveHandler {
         const currentTime = date.getTime()
         if (currentTime - this.touchStartTime < 200) {
             Canvas.currentFigure?.changeFigureCoords('up')
+            MusicPlayer.playSoundTrack(0) 
         } else {
             console.log('long touch')
         }
@@ -810,7 +811,6 @@ class MoveHandler {
         document.addEventListener('touchmove', this.handleTouchMove.bind(this))
         document.addEventListener('touchend', this.handleTouchEnd.bind(this))
     }
-
 }
 
 MoveHandler.assignListeners()
