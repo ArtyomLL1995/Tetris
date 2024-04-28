@@ -145,8 +145,8 @@ class MusicPlayer {
                 }
             }
         })
-        document.querySelector('.music-name').textContent = this.music[index].substring('./Music/'.length).slice(0, -4)
         this.soundTrack.play()
+        document.querySelector('.music-name').textContent = this.music[index].substring('./Music/'.length).slice(0, -4)
     } 
 
     static playFallSound() {
