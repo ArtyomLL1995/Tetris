@@ -1,3 +1,8 @@
+html {
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+}
 
 @font-face {
     font-family: Jersey;
@@ -10,16 +15,16 @@
 }
 
 body {
-    overflow: hidden;
     background-size: cover;
     font-size: 16px;
+    overflow: hidden;
 }
 
 #overlay {
     position: absolute;
     top: 0;
     right: 0;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.6);
 }
@@ -49,7 +54,7 @@ body {
 
 .start-button {
     position: relative; 
-    top: 20px; 
+    top: 0px; 
     background-color:black; 
     color: white; 
     padding: 10px; 
@@ -62,7 +67,7 @@ body {
 
 .music-name {
     position: relative; 
-    top: 20px; 
+    top: 0px; 
     color: white; 
     padding: 10px; 
     font-size: 25px; 
@@ -91,4 +96,24 @@ body {
     color: white;
     font-size: 25px; 
     font-family: Jersey_25;
+}
+
+@media (max-width: 576px) {
+
+    .music-name, .start-button {
+        font-size: 20px; 
+    }
+
+    #container {
+        top: 120px;
+        transform: translate(-50%, 0);
+    }
+
+    #score {
+        right: 0px;
+    }
+
+    #child {
+        top: 100%;
+    }
 }

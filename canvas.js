@@ -1,10 +1,10 @@
 
 class Utils {
 
-    static edgeSize = 25
+    static edgeSize = document.body.offsetWidth > 576 ? 25 : 20
 
     static lineStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6]
-    static hookStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6, this.edgeSize*7]
+    static otherStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6, this.edgeSize*7]
     static cubeStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6, this.edgeSize*7, this.edgeSize*8]
     
     static getRandomStartCoord(figureType) {
@@ -13,7 +13,7 @@ class Utils {
         } else if (figureType === 'cube') {
             return this.cubeStartPositions[Math.floor(Math.random() * this.cubeStartPositions.length)]
         } else {
-            return this.hookStartPositions[Math.floor(Math.random() * this.hookStartPositions.length)]
+            return this.otherStartPositions[Math.floor(Math.random() * this.otherStartPositions.length)]
         }
     }
 
@@ -69,13 +69,15 @@ class Utils {
         canvas.height = this.canvasHeight
         childCanvas.width = this.edgeSize * 4
         childCanvas.height = this.edgeSize * 2
-        scroreScreen.width = this.edgeSize * 10
+        scroreScreen.width = this.edgeSize * 4
         scroreScreen.height = this.edgeSize * 5
-        const childBlock = document.getElementById("child")
-        childBlock.style.right = `-${childCanvas.offsetWidth+50}px`
-        const scroreBlock = document.getElementById("score")
-        scroreBlock.style.top = `${childCanvas.offsetHeight+50}px`
-        scroreBlock.style.right = `-${scroreBlock.offsetWidth+50}px`
+        if (document.body.offsetWidth > 576) {
+            const childBlock = document.getElementById("child")
+            childBlock.style.right = `-${childCanvas.offsetWidth+50}px`
+            const scroreBlock = document.getElementById("score")
+            scroreBlock.style.top = `${childCanvas.offsetHeight+50}px`
+            scroreBlock.style.right = `-${scroreBlock.offsetWidth+50}px`
+        }
     }
 
     static setBackgroundUrl() {
@@ -90,8 +92,7 @@ class Utils {
         const red = match[1];
         const green = match[2];
         const blue = match[3];
-        const modifiedString = 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + newOpacity + ')';
-        return modifiedString;
+        return `rgba(${red},${green},${blue},${newOpacity})`
     }
 }
 
@@ -143,14 +144,8 @@ class MusicPlayer {
                     }, 1000)
                 }
             }
-        });
-
-        const musicNameContainer = document.querySelector('.music-name')
-        let songPath = this.music[index]
-        songPath = songPath.substring('./Music/'.length);
-        songPath = songPath.slice(0, -4);
-        musicNameContainer.textContent = songPath
-
+        })
+        document.querySelector('.music-name').textContent = this.music[index].substring('./Music/'.length).slice(0, -4)
         this.soundTrack.play()
     } 
 
@@ -193,8 +188,6 @@ class FigureForms {
     static hookRight = [{x : (Utils.edgeSize*2), y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
     static zigzagLeft = [{x : 0, y : 0}, {x : Utils.edgeSize, y : 0}, {x : Utils.edgeSize, y : Utils.edgeSize}, {x : (Utils.edgeSize*2), y : Utils.edgeSize}]
     static zigzagRight = [{x : Utils.edgeSize, y : 0}, {x : (Utils.edgeSize*2), y : 0}, {x : 0, y : Utils.edgeSize}, {x : Utils.edgeSize, y : Utils.edgeSize}]
-
-    static colorOpacity = 1
     
     static colors = [
         'rgba(125, 250, 146, 1)', 
@@ -234,12 +227,9 @@ class FigureForms {
 
 class Canvas {
 
-    static canvas = document.getElementById("mainScreen")
-    static ctx = this.canvas.getContext("2d")
-    static child = document.getElementById("secondScreen")
-    static childCtx = this.child.getContext("2d")
-    static scoreScreen = document.getElementById("scoreScreen")
-    static scoreScreenCtx = this.scoreScreen.getContext('2d')
+    static ctx = document.getElementById("mainScreen").getContext("2d")
+    static childCtx = document.getElementById("secondScreen").getContext("2d")
+    static scoreScreenCtx = document.getElementById("scoreScreen").getContext('2d')
     static filledCoordsMap = new Map()
     static keyDirections = { 37: 'left', 38: 'up', 39: 'right', 40: 'down', 32: 'space' }
     static currentFigureCoords
@@ -270,22 +260,29 @@ class Canvas {
         this.nextColor = FigureForms.getRandomColor()
         const type = FigureForms.allFiguresMap.get(this.currentFigureCoords)
         const startOffset = Utils.getRandomStartCoord(type)
+
         const newFigureCoords = this.currentFigureCoords.map(obj => {
             return {x : obj.x + startOffset, y: obj.y}
         })
 
-        this.currentFigure = new Figure(newFigureCoords, this.nextFigureCoords, type, this.currentColor, this.nextColor)
+        this.currentFigure = new Figure(newFigureCoords, type, this.currentColor)
 
         if (this.currentFigure.collisionCheck(newFigureCoords)) {
-            console.log('game over')
-            this.gameOver()
+            document.querySelector('.game-over-screen').style.display = 'flex'
         } else {
             this.currentFigure.initializeListener()
             this.currentFigure.moveDown()
             this.currentFigure.calculateShadowCoords()
             Canvas.childCtx.clearRect(0,0,130,100)
-            this.currentFigure.drawNextFigure()
+            this.drawNextFigure()
         }
+    }
+
+    static drawNextFigure() {
+        this.nextFigureCoords.forEach(figure => {
+            Canvas.childCtx.fillStyle = this.nextColor
+            Canvas.childCtx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
+        })
     }
 
     static drawFallenFigures() {
@@ -311,10 +308,6 @@ class Canvas {
         this.currentFigure.drawShadowFigure()
         this.canvasRequestAnimationFrameId = requestAnimationFrame(() => this.redrawCanvas())
     }
-
-    static gameOver() {
-        document.querySelector('.game-over-screen').style.display = 'flex'
-    }
 }
 
 class Figure {
@@ -322,6 +315,7 @@ class Figure {
     figurePosition = 'right'
     startMoveDownAnimationTime
     startChangeColorAnimationTime
+    createNewFigureTimeOutId
     direction
     quickMoveInterval
     requestAnimationFrameId
@@ -329,18 +323,16 @@ class Figure {
     pressTimer
     shadowFigure = []
     activeFigure
-    nextFigureCoords
     type
     color
     boundKeyUp
     boundHeyDown
+    allowChangeColor = true
 
-    constructor(newFigureCoords, nextFigureCoords, type, color, nextColor) {
+    constructor(newFigureCoords, type, color) {
         this.type = type
         this.activeFigure = newFigureCoords
-        this.nextFigureCoords = nextFigureCoords
         this.color = color
-        this.nextColor = nextColor
         this.boundHeyDown = this.moveFigure.bind(this)
         this.boundKeyUp = this.handleKeyUp.bind(this)
     }
@@ -356,7 +348,6 @@ class Figure {
     }
    
     moveFigure(event) {
-        const context = this
         const eventKeyCode = Canvas.keyDirections[event.keyCode]
         if (eventKeyCode === 'right') this.direction = 'right'
         else if (eventKeyCode === 'left') this.direction = 'left'
@@ -368,15 +359,15 @@ class Figure {
             MusicPlayer.playQuickMoveAudio()
         }
         if (eventKeyCode !== 'up' && !this.pressTimer) {
-            this.pressTimer = setTimeout(function() {
+            this.pressTimer = setTimeout(() => {
                 if (eventKeyCode === 'down') {
-                    context.quickMoveInterval = context.quickMove(20) 
+                    this.quickMoveInterval = this.quickMove(20) 
                 } else if (eventKeyCode === 'space') {     
-                    context.quickMoveInterval = context.quickMove(5) 
-                    context.shadowFigure = []
+                    this.quickMoveInterval = this.quickMove(5) 
+                    this.shadowFigure = []
                     MusicPlayer.playFallSound()
                 } else if (eventKeyCode === 'right' || eventKeyCode === 'left') {
-                    context.quickMoveInterval = context.quickMove(40) 
+                    this.quickMoveInterval = this.quickMove(40) 
                 }
             }, 25)
         }
@@ -402,13 +393,6 @@ class Figure {
         this.activeFigure.forEach(figure => {
             Canvas.ctx.fillStyle = this.color
             Canvas.ctx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
-        })
-    }
-
-    drawNextFigure() {
-        this.nextFigureCoords.forEach(figure => {
-            Canvas.childCtx.fillStyle = this.nextColor
-            Canvas.childCtx.fillRect(figure.x, figure.y, Utils.edgeSize, Utils.edgeSize)
         })
     }
 
@@ -585,8 +569,6 @@ class Figure {
         }
     }
 
-    createNewFigureTimeOutId
-
     moveDown() {
 
         const date = new Date
@@ -670,8 +652,6 @@ class Figure {
         this.shadowFigure = shadowCoords
     }
 
-    allowChangeColor = true
-
     collisionCheck(nextFigurePositions) {
         let collision
         const filledCoords = Array.from(Canvas.filledCoordsMap.keys())
@@ -753,16 +733,14 @@ class Figure {
                     }
                 });
                 Canvas.initializeNewFigure()
+                Canvas.points += this.calculatePoints(moveDownFor)
+                Canvas.level = (Math.ceil(Canvas.points / 5000) === 0 ? 1 : Math.ceil(Canvas.points / 5000))
+                Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
             }, totalFuntTime);
             MusicPlayer.playRemoveLinesAudio()
         } else {
             Canvas.initializeNewFigure()
         }
-
-        Canvas.points += this.calculatePoints(moveDownFor)
-        Canvas.level = (Math.ceil(Canvas.points / 5000) === 0 ? 1 : Math.ceil(Canvas.points / 5000))
-        Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
-
     }
 
     calculatePoints(moveDownFor) {
