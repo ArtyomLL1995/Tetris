@@ -94,6 +94,15 @@ class Utils {
         const blue = match[3];
         return `rgba(${red},${green},${blue},${newOpacity})`
     }
+
+    static startGame() {
+        document.querySelector('.game-over-screen').style.display = 'none'
+        this.shuffle(MusicPlayer.music)
+        Canvas.filledCoordsMap.clear()
+        Canvas.initializeNewFigure()
+        Canvas.redrawCanvas()
+        MusicPlayer.playSoundTrack(0) 
+    }
 }
 
 class MusicPlayer {
@@ -753,59 +762,57 @@ class Figure {
     }
 }
 
-function startGame() {
-    document.querySelector('.game-over-screen').style.display = 'none'
-    Utils.shuffle(MusicPlayer.music)
-    Canvas.filledCoordsMap.clear()
-    Canvas.initializeNewFigure()
-    Canvas.redrawCanvas()
-    MusicPlayer.playSoundTrack(0) 
-}
+class MoveHandler {
 
-let startXCoord
-let startYCoord
-let touchStartTime
-let prevTouchMoveCoord
-const moveGap = 40
-const moveDownGap = 10
-
-function handleTouchStart(event) {
-    startXCoord = event.changedTouches[0].pageX
-    startYCoord = event.changedTouches[0].pageY
-    const date = new Date()
-    touchStartTime = date.getTime()
-}
-
-function handleTouchMove(event) {
-    const currentXCoord = event.changedTouches[0].pageX
-    const currentYCoord = event.changedTouches[0].pageY
-    if (currentXCoord - startXCoord > moveGap) {
-        Canvas.currentFigure?.changeFigureCoords('right')
-        MusicPlayer.playQuickMoveAudio()
-        startXCoord = currentXCoord
-    } else if (currentXCoord - startXCoord < -moveGap) {
-        Canvas.currentFigure?.changeFigureCoords('left')
-        MusicPlayer.playQuickMoveAudio()
-        startXCoord = currentXCoord
-    } else if (currentYCoord - startYCoord > moveDownGap) {
-        Canvas.currentFigure?.changeFigureCoords('down')
-        startYCoord = currentYCoord
+    static startXCoord
+    static startYCoord
+    static touchStartTime
+    static prevTouchMoveCoord
+    static moveGap = 40
+    static moveDownGap = 10
+    
+    static handleTouchStart(event) {
+        this.startXCoord = event.changedTouches[0].pageX
+        this.startYCoord = event.changedTouches[0].pageY
+        const date = new Date()
+        this.touchStartTime = date.getTime()
     }
-}
-
-function handleTouchEnd(event) {
-    const date = new Date()
-    const currentTime = date.getTime()
-    if (currentTime - touchStartTime < 200) {
-        Canvas.currentFigure?.changeFigureCoords('up')
-    } else {
-        console.log('long touch')
+    
+    static handleTouchMove(event) {
+        const currentXCoord = event.changedTouches[0].pageX
+        const currentYCoord = event.changedTouches[0].pageY
+        if (currentXCoord - this.startXCoord > this.moveGap) {
+            Canvas.currentFigure?.changeFigureCoords('right')
+            MusicPlayer.playQuickMoveAudio()
+            this.startXCoord = currentXCoord
+        } else if (currentXCoord - this.startXCoord < -this.moveGap) {
+            Canvas.currentFigure?.changeFigureCoords('left')
+            MusicPlayer.playQuickMoveAudio()
+            this.startXCoord = currentXCoord
+        } else if (currentYCoord - this.startYCoord > this.moveDownGap) {
+            Canvas.currentFigure?.changeFigureCoords('down')
+            this.startYCoord = currentYCoord
+        }
     }
+    
+    static handleTouchEnd(event) {
+        const date = new Date()
+        const currentTime = date.getTime()
+        if (currentTime - this.touchStartTime < 200) {
+            Canvas.currentFigure?.changeFigureCoords('up')
+        } else {
+            console.log('long touch')
+        }
+    }
+
+    static assignListeners() {
+        document.addEventListener('touchstart', this.handleTouchStart.bind(this))
+        document.addEventListener('touchmove', this.handleTouchMove.bind(this))
+        document.addEventListener('touchend', this.handleTouchEnd.bind(this))
+    }
+
 }
 
-document.addEventListener('touchstart', handleTouchStart)
-document.addEventListener('touchmove', handleTouchMove)
-document.addEventListener('touchend', handleTouchEnd)
-
+MoveHandler.assignListeners()
 Utils.setBackgroundUrl()
 Utils.setCanvasSize()
