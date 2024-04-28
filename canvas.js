@@ -769,6 +769,7 @@ let startYCoord
 let touchStartTime
 let prevTouchMoveCoord
 const moveGap = 20
+const moveDownGap = 10
 
 function handleTouchStart(event) {
     startXCoord = event.changedTouches[0].pageX
@@ -788,9 +789,8 @@ function handleTouchMove(event) {
         Canvas.currentFigure?.changeFigureCoords('left')
         MusicPlayer.playQuickMoveAudio()
         startXCoord = currentXCoord
-    } else if (currentYCoord - startYCoord > moveGap) {
+    } else if (currentYCoord - startYCoord > moveDownGap) {
         Canvas.currentFigure?.changeFigureCoords('down')
-        MusicPlayer.playQuickMoveAudio()
         startYCoord = currentYCoord
     }
 }
