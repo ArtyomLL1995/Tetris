@@ -821,7 +821,7 @@ class TouchEventsHandler {
             currentYCoord - this.startSlideCoordY > 10           && 
             currentYCoord - this.startSlideCoordY < 200          && 
             currentTime - this.touchStartTime > 50             && 
-            currentTime - this.touchStartTime < 500) 
+            currentTime - this.touchStartTime < 200) 
         {   
             console.log('2')
             Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
