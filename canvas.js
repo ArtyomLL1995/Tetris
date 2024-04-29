@@ -798,13 +798,14 @@ class TouchEventsHandler {
     }
     
     static handleTouchEnd(event) {
-      
+        
         const date = new Date()
         const currentTime = date.getTime()
         const currentXCoord = event.changedTouches[0].pageX
         const currentYCoord = event.changedTouches[0].pageY 
-
-        if (currentTime - this.touchStartTime < 100              && 
+        console.log('coord: ', currentYCoord - this.startSlideCoord)
+        console.log('time: ', currentTime - this.touchStartTime)
+        if (currentTime - this.touchStartTime < 150              && 
             Math.abs(currentXCoord - this.startXCoord) < 10     &&
             Math.abs(currentYCoord - this.startYCoord) < 10
         ) 
@@ -814,7 +815,7 @@ class TouchEventsHandler {
 
         } else if (
             currentYCoord - this.startSlideCoord > 10           && 
-            currentYCoord - this.startSlideCoord < 100          && 
+            currentYCoord - this.startSlideCoord < 200          && 
             currentTime - this.touchStartTime < 500) 
         {   
 
