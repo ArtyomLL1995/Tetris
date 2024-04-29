@@ -764,6 +764,7 @@ class Figure {
 
 class TouchEventsHandler {
 
+    static startSlideCoord
     static startXCoord
     static startYCoord
     static touchStartTime
@@ -772,6 +773,7 @@ class TouchEventsHandler {
     static moveDownGap = 10
     
     static handleTouchStart(event) {
+        this.startSlideCoord = event.changedTouches[0].pageY
         this.startXCoord = event.changedTouches[0].pageX
         this.startYCoord = event.changedTouches[0].pageY
         const date = new Date()
@@ -796,17 +798,29 @@ class TouchEventsHandler {
     }
     
     static handleTouchEnd(event) {
+      
         const date = new Date()
         const currentTime = date.getTime()
         const currentXCoord = event.changedTouches[0].pageX
         const currentYCoord = event.changedTouches[0].pageY 
 
-        if (currentTime - this.touchStartTime < 150             && 
+        if (currentTime - this.touchStartTime < 50              && 
             Math.abs(currentXCoord - this.startXCoord) < 10     &&
             Math.abs(currentYCoord - this.startYCoord) < 10
         ) 
         {
+
             Canvas.currentFigure?.changeFigureCoords('up')
+
+        } else if (
+            currentYCoord - this.startSlideCoord > 10           && 
+            currentYCoord - this.startSlideCoord < 100          && 
+            currentTime - this.touchStartTime < 200) 
+        {   
+            
+            Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
+            Canvas.currentFigure.shadowFigure = []
+            MusicPlayer.playFallSound()
         }
     }
 
