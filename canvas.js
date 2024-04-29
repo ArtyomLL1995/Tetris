@@ -806,24 +806,21 @@ class TouchEventsHandler {
         const currentXCoord = event.changedTouches[0].pageX
         const currentYCoord = event.changedTouches[0].pageY 
 
-        console.log('coord: ', currentYCoord - this.startSlideCoordY)
-        console.log('time: ', currentTime - this.touchStartTime)
-
-        if (currentTime - this.touchStartTime < 150                 && 
+        if (currentTime - this.touchStartTime < 150                      && 
             Math.abs(currentXCoord - this.startSlideCoordX) < 10         &&
             Math.abs(currentYCoord - this.startSlideCoordY) < 10
         ) 
         {
-            console.log('1')
             Canvas.currentFigure?.changeFigureCoords('up')
 
         } else if (
             currentYCoord - this.startSlideCoordY > 25           && 
-            currentYCoord - this.startSlideCoordY < 200          && 
-            currentTime - this.touchStartTime > 50             && 
-            currentTime - this.touchStartTime < 200) 
+            currentYCoord - this.startSlideCoordY < 150          && 
+            currentTime - this.touchStartTime > 50               && 
+            currentTime - this.touchStartTime < 200              &&
+            Canvas.currentFigure.shadowFigure.length > 0
+            ) 
         {   
-            console.log('2')
             Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
             Canvas.currentFigure.shadowFigure = []
             MusicPlayer.playFallSound()
