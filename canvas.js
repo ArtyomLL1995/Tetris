@@ -804,7 +804,7 @@ class TouchEventsHandler {
         const currentXCoord = event.changedTouches[0].pageX
         const currentYCoord = event.changedTouches[0].pageY 
 
-        if (currentTime - this.touchStartTime < 50              && 
+        if (currentTime - this.touchStartTime < 100              && 
             Math.abs(currentXCoord - this.startXCoord) < 10     &&
             Math.abs(currentYCoord - this.startYCoord) < 10
         ) 
@@ -815,9 +815,9 @@ class TouchEventsHandler {
         } else if (
             currentYCoord - this.startSlideCoord > 10           && 
             currentYCoord - this.startSlideCoord < 100          && 
-            currentTime - this.touchStartTime < 200) 
+            currentTime - this.touchStartTime < 500) 
         {   
-            
+
             Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
             Canvas.currentFigure.shadowFigure = []
             MusicPlayer.playFallSound()
