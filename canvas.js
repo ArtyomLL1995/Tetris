@@ -99,6 +99,7 @@ class Utils {
         document.querySelector('.game-over-screen').style.display = 'none'
         this.shuffle(MusicPlayer.music)
         Canvas.filledCoordsMap.clear()
+        Canvas.SPEED = Canvas.startSpeed
         Canvas.initializeNewFigure()
         Canvas.redrawCanvas()
         MusicPlayer.playSoundTrack(0) 
@@ -761,13 +762,13 @@ class Figure {
     }
 }
 
-class MoveHandler {
+class TouchEventsHandler {
 
     static startXCoord
     static startYCoord
     static touchStartTime
     static prevTouchMoveCoord
-    static moveGap = 30
+    static moveGap = 20
     static moveDownGap = 10
     
     static handleTouchStart(event) {
@@ -803,10 +804,9 @@ class MoveHandler {
         if (currentTime - this.touchStartTime < 150             && 
             Math.abs(currentXCoord - this.startXCoord) < 10     &&
             Math.abs(currentYCoord - this.startYCoord) < 10
-        ) {
+        ) 
+        {
             Canvas.currentFigure?.changeFigureCoords('up')
-        } else {
-            console.log('long touch')
         }
     }
 
@@ -817,6 +817,6 @@ class MoveHandler {
     }
 }
 
-MoveHandler.assignListeners()
+TouchEventsHandler.assignListeners()
 Utils.setBackgroundUrl()
 Utils.setCanvasSize()
