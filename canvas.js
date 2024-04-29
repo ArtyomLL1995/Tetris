@@ -764,7 +764,8 @@ class Figure {
 
 class TouchEventsHandler {
 
-    static startSlideCoord
+    static startSlideCoordY
+    static startSlideCoordX
     static startXCoord
     static startYCoord
     static touchStartTime
@@ -773,7 +774,8 @@ class TouchEventsHandler {
     static moveDownGap = 10
     
     static handleTouchStart(event) {
-        this.startSlideCoord = event.changedTouches[0].pageY
+        this.startSlideCoordY = event.changedTouches[0].pageY
+        this.startSlideCoordX = event.changedTouches[0].pageX
         this.startXCoord = event.changedTouches[0].pageX
         this.startYCoord = event.changedTouches[0].pageY
         const date = new Date()
@@ -804,24 +806,24 @@ class TouchEventsHandler {
         const currentXCoord = event.changedTouches[0].pageX
         const currentYCoord = event.changedTouches[0].pageY 
 
-        console.log('coord: ', currentYCoord - this.startSlideCoord)
+        console.log('coord: ', currentYCoord - this.startSlideCoordY)
         console.log('time: ', currentTime - this.touchStartTime)
 
         if (currentTime - this.touchStartTime < 150                 && 
-            Math.abs(currentXCoord - this.startXCoord) < 10         &&
-            Math.abs(currentYCoord - this.startYCoord) < 10
+            Math.abs(currentXCoord - this.startSlideCoordX) < 10         &&
+            Math.abs(currentYCoord - this.startSlideCoordY) < 10
         ) 
         {
-
+            console.log('1')
             Canvas.currentFigure?.changeFigureCoords('up')
 
         } else if (
-            currentYCoord - this.startSlideCoord > 10           && 
-            currentYCoord - this.startSlideCoord < 200          && 
+            currentYCoord - this.startSlideCoordY > 10           && 
+            currentYCoord - this.startSlideCoordY < 200          && 
             currentTime - this.touchStartTime > 50             && 
             currentTime - this.touchStartTime < 500) 
         {   
-
+            console.log('2')
             Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
             Canvas.currentFigure.shadowFigure = []
             MusicPlayer.playFallSound()
