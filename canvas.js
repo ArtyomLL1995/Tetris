@@ -818,7 +818,7 @@ class TouchEventsHandler {
             Canvas.currentFigure?.changeFigureCoords('up')
 
         } else if (
-            currentYCoord - this.startSlideCoordY > 10           && 
+            currentYCoord - this.startSlideCoordY > 25           && 
             currentYCoord - this.startSlideCoordY < 200          && 
             currentTime - this.touchStartTime > 50             && 
             currentTime - this.touchStartTime < 200) 
