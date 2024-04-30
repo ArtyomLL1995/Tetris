@@ -94,7 +94,9 @@ class Utils {
     }
 
     static setBackgroundUrl() {
-        const url = this.backgroundImages[Math.floor(Math.random()*this.backgroundImages.length)]
+        const url = document.body.offsetWidth > 576 
+        ? this.backgroundImages[Math.floor(Math.random()*this.backgroundImages.length)]
+        : this.backgroundImagesSmall[Math.floor(Math.random()*this.backgroundImagesSmall.length)]
         document.body.style.backgroundImage = `url(${url})`
         document.body.style.backgroundSize = 'cover'
     }
