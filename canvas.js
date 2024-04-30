@@ -314,8 +314,7 @@ class Canvas {
         this.scoreScreenCtx.clearRect(0, 0, Utils.edgeSize * 4, Utils.edgeSize * 5)
         this.scoreScreenCtx.font = document.body.offsetWidth > 576 ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
-        //this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
-        this.scoreScreenCtx.fillText('LEVEL 500', 0, 20)
+        this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
         if (document.body.offsetWidth > 576) {
             this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60)
         } else {
