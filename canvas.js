@@ -814,12 +814,12 @@ class TouchEventsHandler {
             Canvas.currentFigure?.changeFigureCoords('up')
 
         } else if (
-            currentYCoord - this.startSlideCoordY > 25           && 
+            currentYCoord - this.startSlideCoordY > 15           && 
             currentYCoord - this.startSlideCoordY < 150          && 
             currentTime - this.touchStartTime > 50               && 
             currentTime - this.touchStartTime < 200              &&
             Canvas.currentFigure.shadowFigure.length > 0
-            ) 
+        ) 
         {   
             Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
             Canvas.currentFigure.shadowFigure = []
