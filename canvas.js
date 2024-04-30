@@ -61,24 +61,29 @@ class Utils {
     static canvasWidth = this.edgeSize * 10
     static canvasHeight = this.edgeSize * 20
 
+    static scoreCanvasWidth = document.body.offsetWidth > 576 ? this.edgeSize * 5 : this.edgeSize * 4
+    static scoreCanvasHeight = this.edgeSize * 5
+
+    static childCanvasWidth = this.edgeSize * 4
+    static childCanvasHeight = document.body.offsetWidth > 576 ? this.edgeSize * 2 : this.edgeSize * 5
+
     static setCanvasSize() {
         const canvas = document.getElementById("mainScreen")
         const childCanvas = document.getElementById("secondScreen")
         const scroreScreen = document.getElementById("scoreScreen")
         canvas.width = this.canvasWidth
         canvas.height = this.canvasHeight
-        childCanvas.width = this.edgeSize * 4
-        scroreScreen.width = this.edgeSize * 4
-        scroreScreen.height = this.edgeSize * 5
+        childCanvas.width = this.childCanvasWidth
+        childCanvas.height = this.childCanvasHeight
+        scroreScreen.height = this.scoreCanvasHeight
+        scroreScreen.width = this.scoreCanvasWidth
         const childBlock = document.getElementById("child")
         const scroreBlock = document.getElementById("score")
         if (document.body.offsetWidth > 576) {
-            childCanvas.height = this.edgeSize * 2
             childBlock.style.right = `-${childCanvas.offsetWidth+50}px`
             scroreBlock.style.top = `${childCanvas.offsetHeight+50}px`
             scroreBlock.style.right = `-${scroreBlock.offsetWidth+50}px`
         } else {
-            childCanvas.height = this.edgeSize * 5
             childBlock.style.top = `-${childCanvas.offsetHeight+10}px`
             scroreBlock.style.top = `-${scroreBlock.offsetHeight+10}px`
         }
@@ -306,14 +311,15 @@ class Canvas {
     }
 
     static drawScore() {
-        this.scoreScreenCtx.clearRect(0,0,200,200)
+        this.scoreScreenCtx.clearRect(0, 0, Utils.edgeSize * 4, Utils.edgeSize * 5)
         this.scoreScreenCtx.font = document.body.offsetWidth > 576 ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
-        this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20, 200)
+        //this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
+        this.scoreScreenCtx.fillText('LEVEL 500', 0, 20)
         if (document.body.offsetWidth > 576) {
-            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60, 200)
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60)
         } else {
-            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 50, 200)
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 50)
         }
     }
 
