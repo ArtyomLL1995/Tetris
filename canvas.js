@@ -59,7 +59,7 @@ class Utils {
     ]
 
     static backgroundImagesSmall = [
-        './Images-Small/1.jpg'
+        './images-small/1.jpg'
     ]
 
     static canvasWidth = this.edgeSize * 10
