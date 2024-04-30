@@ -58,10 +58,14 @@ class Utils {
         './Images/41.jpeg'
     ]
 
+    static backgroundImagesSmall = [
+        './Images-Small/1.jpg'
+    ]
+
     static canvasWidth = this.edgeSize * 10
     static canvasHeight = this.edgeSize * 20
 
-    static scoreCanvasWidth = document.body.offsetWidth > 576 ? this.edgeSize * 5 : this.edgeSize * 4
+    static scoreCanvasWidth = this.edgeSize * 5
     static scoreCanvasHeight = this.edgeSize * 5
 
     static childCanvasWidth = this.edgeSize * 4
@@ -90,7 +94,9 @@ class Utils {
     }
 
     static setBackgroundUrl() {
-        const url = this.backgroundImages[Math.floor(Math.random()*this.backgroundImages.length)]
+        const url = document.body.offsetWidth > 576 
+        ? this.backgroundImages[Math.floor(Math.random()*this.backgroundImages.length)]
+        : this.backgroundImagesSmall[Math.floor(Math.random()*this.backgroundImagesSmall.length)]
         document.body.style.backgroundImage = `url(${url})`
         document.body.style.backgroundSize = 'cover'
     }
@@ -311,7 +317,7 @@ class Canvas {
     }
 
     static drawScore() {
-        this.scoreScreenCtx.clearRect(0, 0, Utils.edgeSize * 4, Utils.edgeSize * 5)
+        this.scoreScreenCtx.clearRect(0, 0, Utils.scoreCanvasWidth, Utils.scoreCanvasHeight)
         this.scoreScreenCtx.font = document.body.offsetWidth > 576 ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
         this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
