@@ -176,8 +176,8 @@ class MusicPlayer {
     static playFallSound() {
         this.fallSound?.stop()
         this.fallSound = new Howl({
-            src: ['sounds/punch.wav'],
-            volume: 1
+            src: ['sounds/quick_4.wav'],
+            volume: .5
         })
         this.fallSound.play()
     }
