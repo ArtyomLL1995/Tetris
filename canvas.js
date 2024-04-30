@@ -68,15 +68,19 @@ class Utils {
         canvas.width = this.canvasWidth
         canvas.height = this.canvasHeight
         childCanvas.width = this.edgeSize * 4
-        childCanvas.height = this.edgeSize * 2
         scroreScreen.width = this.edgeSize * 4
         scroreScreen.height = this.edgeSize * 5
+        const childBlock = document.getElementById("child")
+        const scroreBlock = document.getElementById("score")
         if (document.body.offsetWidth > 576) {
-            const childBlock = document.getElementById("child")
+            childCanvas.height = this.edgeSize * 2
             childBlock.style.right = `-${childCanvas.offsetWidth+50}px`
-            const scroreBlock = document.getElementById("score")
             scroreBlock.style.top = `${childCanvas.offsetHeight+50}px`
             scroreBlock.style.right = `-${scroreBlock.offsetWidth+50}px`
+        } else {
+            childCanvas.height = this.edgeSize * 5
+            childBlock.style.top = `-${childCanvas.offsetHeight+10}px`
+            scroreBlock.style.top = `-${scroreBlock.offsetHeight+10}px`
         }
     }
 
@@ -303,10 +307,14 @@ class Canvas {
 
     static drawScore() {
         this.scoreScreenCtx.clearRect(0,0,200,200)
-        this.scoreScreenCtx.font = '30px Jersey_25'
+        this.scoreScreenCtx.font = document.body.offsetWidth > 576 ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
         this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20, 200)
-        this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60, 200)
+        if (document.body.offsetWidth > 576) {
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60, 200)
+        } else {
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 50, 200)
+        }
     }
 
     static redrawCanvas() {

@@ -105,15 +105,11 @@ body {
     }
 
     #container {
-        top: 120px;
-        transform: translate(-50%, 0);
+        transform: translate(-50%, -35%);
     }
 
     #score {
+        border: 1px solid red;
         right: 0px;
-    }
-
-    #child {
-        top: 100%;
     }
 }
