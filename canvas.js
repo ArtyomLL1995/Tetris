@@ -115,6 +115,8 @@ class Utils {
         this.shuffle(MusicPlayer.music)
         Canvas.filledCoordsMap.clear()
         Canvas.SPEED = Canvas.startSpeed
+        Canvas.level = 1
+        Canvas.points = 0
         Canvas.initializeNewFigure()
         Canvas.redrawCanvas()
         MusicPlayer.playSoundTrack(0) 
