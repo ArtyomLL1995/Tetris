@@ -55,11 +55,20 @@ class Utils {
         './Images/38.jpeg', 
         './Images/39.jpeg', 
         './Images/40.jpeg', 
-        './Images/41.jpeg'
+        './Images/41.jpeg',
+        './Images/Lo-Fi_1.gif',
+        './Images/2.gif'
     ]
 
     static backgroundImagesSmall = [
-        './images-small/1.jpg'
+        './images-small/1.jpg',
+        './images-small/2.gif',
+        './images-small/3.jpeg',
+        './images-small/4.jpeg',
+        './images-small/5.jpeg',
+        './images-small/6.jpeg',
+        './images-small/7.jpeg',
+        './images-small/8.jpeg',
     ]
 
     static canvasWidth = this.edgeSize * 10
@@ -197,7 +206,7 @@ class MusicPlayer {
         this.removeLinesSound?.stop()
         this.removeLinesSound = new Howl({
             src: ['sounds/quick_5.wav'],
-            volume : 1,
+            volume : .6,
             rate : 1
         });
         this.removeLinesSound.play();
