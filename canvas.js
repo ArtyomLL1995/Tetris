@@ -28,36 +28,22 @@ class Utils {
 
     static backgroundImages = [
         './Images/1.jpeg', 
-        './Images/2.jpeg', 
-        './Images/3.jpeg', 
         './Images/4.jpeg', 
-        './Images/5.jpeg', 
-        './Images/6.jpeg',
-        './Images/8.jpeg', 
-        './Images/9.jpeg',  
-        './Images/13.jpeg', 
+        './Images/8.jpeg',  
         './Images/14.jpeg', 
         './Images/19.jpeg',
-        './Images/18.jpeg', 
         './Images/16.jpeg', 
         './Images/20.webp', 
-        './Images/22.jpeg', 
         './Images/23.jpeg', 
         './Images/24.jpeg', 
         './Images/25.jpeg',
         './Images/26.jpeg', 
         './Images/27.jpeg', 
-        './Images/28.jpeg', 
-        './Images/29.jpeg', 
         './Images/31.jpg',  
-        './Images/33.jpg',
-        './Images/37.jpeg', 
-        './Images/38.jpeg', 
         './Images/39.jpeg', 
-        './Images/40.jpeg', 
-        './Images/41.jpeg',
         './Images/Lo-Fi_1.gif',
-        './Images/2.gif'
+        './Images/2.gif',
+        './Images/32.gif'
     ]
 
     static backgroundImagesSmall = [
@@ -74,7 +60,7 @@ class Utils {
     static canvasWidth = this.edgeSize * 10
     static canvasHeight = this.edgeSize * 20
 
-    static scoreCanvasWidth = this.edgeSize * 5
+    static scoreCanvasWidth = document.body.offsetWidth > 576 ? this.edgeSize * 7 : this.edgeSize * 6
     static scoreCanvasHeight = this.edgeSize * 5
 
     static childCanvasWidth = this.edgeSize * 4
