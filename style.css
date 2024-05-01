@@ -113,7 +113,6 @@ body {
     }
 
     #container {
-        border: 1px solid red;
         transform: translate(-50%, 0px);
         bottom: 20px;
         left: 50%;
