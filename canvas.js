@@ -179,7 +179,7 @@ class MusicPlayer {
         this.fallSound?.stop()
         this.fallSound = new Howl({
             src: ['sounds/quick_4.wav'],
-            volume: .5
+            volume: .3
         })
         this.fallSound.play()
     }
