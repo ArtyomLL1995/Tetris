@@ -97,8 +97,8 @@ class Utils {
         const url = document.body.offsetWidth > 576 
         ? this.backgroundImages[Math.floor(Math.random()*this.backgroundImages.length)]
         : this.backgroundImagesSmall[Math.floor(Math.random()*this.backgroundImagesSmall.length)]
-        document.body.style.backgroundImage = `url(${url})`
-        document.body.style.backgroundSize = 'cover'
+        document.querySelector('.background-overlay').style.backgroundImage = `url(${url})`
+        document.querySelector('.background-overlay').style.backgroundSize = 'cover'
     }
 
     static changeOpacity(inputString, newOpacity) {

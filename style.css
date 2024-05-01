@@ -15,8 +15,6 @@ html {
 }
 
 body {
-    background-size: cover;
-    font-size: 16px;
     overflow: hidden;
 }
 
@@ -27,14 +25,24 @@ body {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.6);
+    z-index: 2;
+}
+
+.background-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
 }
 
 #container {
     width: auto;
     position: absolute;
-    top: 55%;
+    bottom: 100px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 0px);
 }
 
 #mainScreen { 
@@ -105,7 +113,10 @@ body {
     }
 
     #container {
-        transform: translate(-50%, -35%);
+        border: 1px solid red;
+        transform: translate(-50%, 0px);
+        bottom: 20px;
+        left: 50%;
     }
 
     #score {
