@@ -1,7 +1,9 @@
 
 class Utils {
 
-    static edgeSize = document.body.offsetWidth > 576 ? 25 : 20
+    static smallScreenSizeBreakPoint = 576
+
+    static edgeSize = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? 25 : 20
 
     static lineStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6]
     static otherStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6, this.edgeSize*7]
@@ -60,11 +62,11 @@ class Utils {
     static canvasWidth = this.edgeSize * 10
     static canvasHeight = this.edgeSize * 20
 
-    static scoreCanvasWidth = document.body.offsetWidth > 576 ? this.edgeSize * 7 : this.edgeSize * 6
+    static scoreCanvasWidth = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? this.edgeSize * 7 : this.edgeSize * 6
     static scoreCanvasHeight = this.edgeSize * 5
 
     static childCanvasWidth = this.edgeSize * 4
-    static childCanvasHeight = document.body.offsetWidth > 576 ? this.edgeSize * 2 : this.edgeSize * 5
+    static childCanvasHeight = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? this.edgeSize * 2 : this.edgeSize * 5
 
     static setCanvasSize() {
         const canvas = document.getElementById("mainScreen")
@@ -78,7 +80,7 @@ class Utils {
         scroreScreen.width = this.scoreCanvasWidth
         const childBlock = document.getElementById("child")
         const scroreBlock = document.getElementById("score")
-        if (document.body.offsetWidth > 576) {
+        if (document.body.offsetWidth > this.smallScreenSizeBreakPoint) {
             childBlock.style.right = `-${childCanvas.offsetWidth+50}px`
             scroreBlock.style.top = `${childCanvas.offsetHeight+50}px`
             scroreBlock.style.right = `-${scroreBlock.offsetWidth+50}px`
@@ -89,7 +91,7 @@ class Utils {
     }
 
     static setBackgroundUrl() {
-        const url = document.body.offsetWidth > 576 
+        const url = document.body.offsetWidth > this.smallScreenSizeBreakPoint 
         ? this.backgroundImages[Math.floor(Math.random()*this.backgroundImages.length)]
         : this.backgroundImagesSmall[Math.floor(Math.random()*this.backgroundImagesSmall.length)]
         document.querySelector('.background-overlay').style.backgroundImage = `url(${url})`
@@ -221,23 +223,17 @@ class FigureForms {
         'rgba(255, 0, 128, 1)'
     ]
    
-    static allFiguresMap = new Map()
-
-    static populateFiguresMap() {
-        if (this.allFiguresMap.size === 0) {
-            this.allFiguresMap
-            .set(this.line, 'line')
-            .set(this.cube, 'cube')
-            .set(this.pyramid, 'pyramid')
-            .set(this.hookLeft, 'hookLeft')
-            .set(this.hookRight, 'hookRight')
-            .set(this.zigzagLeft, 'zigzagLeft')
-            .set(this.zigzagRight, 'zigzagRight')
-        }
-    }
+    static allFiguresMap = new Map([
+        [this.line, 'line'],
+        [this.cube, 'cube'],
+        [this.pyramid, 'pyramid'],
+        [this.hookLeft, 'hookLeft'],
+        [this.hookRight, 'hookRight'],
+        [this.zigzagLeft, 'zigzagLeft'],
+        [this.zigzagRight, 'zigzagRight']
+    ])
     
     static getRandomFigure() {
-        this.populateFiguresMap()
         return Array.from(this.allFiguresMap.keys())[Math.floor(Math.random() * Array.from(this.allFiguresMap.keys()).length)]
     }
 
@@ -315,10 +311,10 @@ class Canvas {
 
     static drawScore() {
         this.scoreScreenCtx.clearRect(0, 0, Utils.scoreCanvasWidth, Utils.scoreCanvasHeight)
-        this.scoreScreenCtx.font = document.body.offsetWidth > 576 ? '30px Jersey_25' : '20px Jersey_25'
+        this.scoreScreenCtx.font = document.body.offsetWidth > Utils.smallScreenSizeBreakPoint ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
         this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
-        if (document.body.offsetWidth > 576) {
+        if (document.body.offsetWidth > Utils.smallScreenSizeBreakPoint) {
             this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60)
         } else {
             this.scoreScreenCtx.fillText('Points ' + this.points, 0, 50)
