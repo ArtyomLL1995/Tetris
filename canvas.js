@@ -121,6 +121,7 @@ class Utils {
         Canvas.filledCoordsMap.clear()
         Canvas.SPEED = Canvas.startSpeed
         Canvas.level = 1
+        Canvas.lines = 0
         Canvas.points = 0
         Canvas.initializeNewFigure()
         Canvas.redrawCanvas()
@@ -820,7 +821,7 @@ class Figure {
         Canvas.lines += linesToRemove
         Canvas.points += points
         Canvas.level = Math.ceil(Canvas.lines / 10)
-        Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
+        Canvas.SPEED = Canvas.startSpeed - (100 * (Canvas.level - 1))
     }
 }
 
