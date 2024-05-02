@@ -106,9 +106,19 @@ body {
     font-family: Jersey_25;
 }
 
+.best-results-container {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+    font-family: Jersey_25;
+    font-size: 25px;
+    text-align: right;
+}
+
 @media (max-width: 576px) {
 
-    .music-name, .start-button {
+    .start-button {
         font-size: 20px; 
     }
 
@@ -119,6 +129,17 @@ body {
     }
 
     #score {
-        right: 0px;
+        right: -10px;
+    }
+
+    .music-name {
+        font-size: 20px; 
+        top: 0px;
+        left: 0px;
+        width: 70%;
+    }
+
+    .best-results-container {
+        font-size: 20px;
     }
 }

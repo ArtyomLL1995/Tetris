@@ -118,6 +118,35 @@ class Utils {
         Canvas.redrawCanvas()
         MusicPlayer.playSoundTrack(0) 
     }
+
+    static setBestResult(newBestResult) {
+        const bestResults = [...this.getBestResults().split(','), newBestResult].sort((a, b) => a - b)
+        if (bestResults.length > 10) {
+            bestResults.pop()
+        }
+        localStorage.setItem('tetris_best_results', bestResults.join(','))
+    }
+
+    static getBestResults() {
+        let bestResults = localStorage.getItem('tetris_best_results')
+        if (!bestResults) {
+            localStorage.setItem('tetris_best_results', 0)
+            bestResults = localStorage.getItem('tetris_best_results')
+        }
+        return bestResults
+    }
+
+    static renderBestResults() {
+        const bestResults = this.getBestResults()
+        const bestResultsContainer = document.querySelector('.best-results-container')
+        bestResultsContainer.innerHTML = ''
+        bestResultsContainer.textContent = 'Best Results:'
+        bestResults.split(',').forEach(bestResult => {
+            const div = document.createElement('div')
+            div.textContent = bestResult
+            bestResultsContainer.appendChild(div)
+        })
+    }
 }
 
 class MusicPlayer {
@@ -253,6 +282,7 @@ class Canvas {
     static nextFigureCoords = FigureForms.getRandomFigure()
     static nextColor = FigureForms.getRandomColor()
     static currentColor
+    static lines = 0
     static points = 0
     static level = 1
     static startSpeed =  1000
@@ -285,6 +315,8 @@ class Canvas {
         this.currentFigure = new Figure(newFigureCoords, type, this.currentColor)
 
         if (this.currentFigure.collisionCheck(newFigureCoords)) {
+            Utils.setBestResult(this.points)
+            Utils.renderBestResults()
             document.querySelector('.game-over-screen').style.display = 'flex'
         } else {
             this.currentFigure.initializeListener()
@@ -315,9 +347,13 @@ class Canvas {
         this.scoreScreenCtx.fillStyle = 'white'
         this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
         if (document.body.offsetWidth > Utils.smallScreenSizeBreakPoint) {
-            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 60)
+            this.scoreScreenCtx.font = '25px Jersey_25'
+            this.scoreScreenCtx.fillText('Lines ' + this.lines, 0, 60)
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 100)
         } else {
-            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 50)
+            this.scoreScreenCtx.font = '20px Jersey_25'
+            this.scoreScreenCtx.fillText('Lines ' + this.lines, 0, 50)
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 80)
         }
     }
 
@@ -397,9 +433,13 @@ class Figure {
     quickMove(speed) {
         clearInterval(this.quickMoveInterval)
         return setInterval(() => {
-            if (this.changeFigureCoords(this.direction) && this.direction !== 'down') {
-                MusicPlayer.playQuickMoveAudio()
-            }
+            if (this.changeFigureCoords(this.direction)) {
+                if (this.direction !== 'down') {
+                    MusicPlayer.playQuickMoveAudio()
+                } else {
+                    Canvas.points += 1
+                } 
+            } 
         }, speed)
     }
 
@@ -707,7 +747,7 @@ class Figure {
     tetrisCheck() {
 
         const allRows = {}
-        let moveDownFor = 0
+        let linesToRemove = 0
         let lowKey = []
 
         Array.from(Canvas.filledCoordsMap.keys()).forEach(coord => {
@@ -721,7 +761,7 @@ class Figure {
             if (value.length === Utils.canvasWidth / Utils.edgeSize) {
                 value.forEach(v => Canvas.filledCoordsMap.delete(v))
                 lowKey.push(key)
-                moveDownFor += Utils.edgeSize
+                linesToRemove += 1
             }
         }
 
@@ -754,23 +794,25 @@ class Figure {
                     }
                 });
                 Canvas.initializeNewFigure()
-                Canvas.points += this.calculatePoints(moveDownFor)
-                Canvas.level = (Math.ceil(Canvas.points / 5000) === 0 ? 1 : Math.ceil(Canvas.points / 5000))
-                Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
+                this.calculatePoints(linesToRemove)
             }, totalFuntTime);
             MusicPlayer.playRemoveLinesAudio()
         } else {
+            Canvas.points += 15
             Canvas.initializeNewFigure()
         }
     }
 
-    calculatePoints(moveDownFor) {
+    calculatePoints(linesToRemove) {
         let points
-        if (moveDownFor === (4 * Utils.edgeSize)) points = moveDownFor * 40
-        else if (moveDownFor === (3 * Utils.edgeSize)) points = moveDownFor * 30
-        else if (moveDownFor === (2 * Utils.edgeSize)) points = moveDownFor * 20
-        else points = moveDownFor * 10
-        return points
+        if (linesToRemove === 4) points = 1500
+        else if (linesToRemove === 3) points = 700
+        else if (linesToRemove === 2) points = 300
+        else if (linesToRemove === 1) points = 100
+        Canvas.lines += linesToRemove
+        Canvas.points += points
+        Canvas.level = Math.ceil(Canvas.lines / 10)
+        Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
     }
 }
 
@@ -834,8 +876,10 @@ class TouchEventsHandler {
             Canvas.currentFigure.shadowFigure.length > 0
         ) 
         {   
+
             Canvas.currentFigure.activeFigure = [...Canvas.currentFigure.shadowFigure]
             Canvas.currentFigure.shadowFigure = []
+            Canvas.points += 50
             MusicPlayer.playFallSound()
         }
     }
@@ -850,3 +894,4 @@ class TouchEventsHandler {
 TouchEventsHandler.assignListeners()
 Utils.setBackgroundUrl()
 Utils.setCanvasSize()
+Utils.renderBestResults()
