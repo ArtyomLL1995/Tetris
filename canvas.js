@@ -30,7 +30,6 @@ class Utils {
 
     static backgroundImages = [
         './Images/1.jpeg', 
-        './Images/4.jpeg', 
         './Images/8.jpeg',  
         './Images/14.jpeg', 
         './Images/19.jpeg',
@@ -45,7 +44,11 @@ class Utils {
         './Images/39.jpeg', 
         './Images/Lo-Fi_1.gif',
         './Images/2.gif',
-        './Images/32.gif'
+        './Images/32.gif',
+        './Images/33.gif',
+        './Images/34.gif',
+        './Images/35.gif',
+        './Images/36.gif',
     ]
 
     static backgroundImagesSmall = [
@@ -57,6 +60,11 @@ class Utils {
         './images-small/6.jpeg',
         './images-small/7.jpeg',
         './images-small/8.jpeg',
+        './images-small/10.jpg',
+       './images-small/11.gif',
+        './images-small/12.gif',
+        './images-small/13.gif',
+        './images-small/14.gif',
     ]
 
     static canvasWidth = this.edgeSize * 10
