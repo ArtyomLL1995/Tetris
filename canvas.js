@@ -270,12 +270,12 @@ class FigureForms {
    
     static allFiguresMap = new Map([
         [this.line, 'line'],
-        // [this.cube, 'cube'],
-        // [this.pyramid, 'pyramid'],
-        // [this.hookLeft, 'hookLeft'],
-        // [this.hookRight, 'hookRight'],
-        // [this.zigzagLeft, 'zigzagLeft'],
-        // [this.zigzagRight, 'zigzagRight']
+        [this.cube, 'cube'],
+        [this.pyramid, 'pyramid'],
+        [this.hookLeft, 'hookLeft'],
+        [this.hookRight, 'hookRight'],
+        [this.zigzagLeft, 'zigzagLeft'],
+        [this.zigzagRight, 'zigzagRight']
     ])
     
     static getRandomFigure() {
