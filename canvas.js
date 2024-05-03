@@ -60,7 +60,7 @@ class Utils {
         './images-small/6.jpeg',
         './images-small/7.jpeg',
         './images-small/8.jpeg',
-        './images-small/10.jpg',
+        './images-small/10.gif',
        './images-small/11.gif',
         './images-small/12.gif',
         './images-small/13.gif',
