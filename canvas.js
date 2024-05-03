@@ -829,9 +829,9 @@ class Figure {
         Canvas.points += points
         Canvas.level = Math.ceil(Canvas.lines / 10)
         if (Canvas.level <= 6) {
-            Canvas.SPEED = Canvas.startSpeed - (100 * (Canvas.level - 1))
+            Canvas.SPEED -= 100
         } else {
-            Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
+            Canvas.SPEED -= 50
         }
     }
 }
