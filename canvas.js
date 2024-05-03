@@ -61,7 +61,7 @@ class Utils {
         './images-small/7.jpeg',
         './images-small/8.jpeg',
         './images-small/10.gif',
-       './images-small/11.gif',
+        './images-small/11.gif',
         './images-small/12.gif',
         './images-small/13.gif',
         './images-small/14.gif',
@@ -824,6 +824,7 @@ class Figure {
     }
 
     calculatePoints(linesToRemove) {
+        const currentLevel = Canvas.level
         let points
         if (linesToRemove === 4) points = 1500
         else if (linesToRemove === 3) points = 700
@@ -832,10 +833,12 @@ class Figure {
         Canvas.lines += linesToRemove
         Canvas.points += points
         Canvas.level = Math.ceil(Canvas.lines / 10)
-        if (Canvas.level <= 6) {
-            Canvas.SPEED -= 100
-        } else {
-            Canvas.SPEED -= 50
+        if (currentLevel !== Canvas.level) {
+            if (Canvas.level <= 6) {
+                Canvas.SPEED -= 100
+            } else {
+                Canvas.SPEED -= 50
+            }
         }
     }
 }
