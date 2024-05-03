@@ -123,7 +123,7 @@ class Utils {
         } else {
             this.allowBackgroundChange = true
         }
-         document.querySelector('.game-over-screen').style.display = 'none'
+        document.querySelector('.game-over-screen').style.display = 'none'
         this.shuffle(MusicPlayer.music)
         Canvas.filledCoordsMap.clear()
         Canvas.SPEED = Canvas.startSpeed
@@ -705,12 +705,14 @@ class Figure {
                     coordsCopy.forEach(figure => figure.x -= Utils.edgeSize)  
                 break
             }
-            if (!this.collisionCheck(coordsCopy) && direction !== 'up') {
-                this.activeFigure = [...coordsCopy]
-                allowChangeCoords = true
-            }
-            if (direction === 'left' || direction === 'right') {
-                this.calculateShadowCoords()
+            if (!this.collisionCheck(coordsCopy)) {
+                if (direction !== 'up') {
+                    this.activeFigure = [...coordsCopy]
+                    allowChangeCoords = true
+                }
+                if (direction === 'left' || direction === 'right') {
+                    this.calculateShadowCoords()
+                }
             }
         }
         return allowChangeCoords
@@ -812,7 +814,7 @@ class Figure {
                 Canvas.initializeNewFigure()
                 this.calculatePoints(linesToRemove)
             }, totalFuncTime);
-            
+
             MusicPlayer.playRemoveLinesAudio()
 
         } else {
