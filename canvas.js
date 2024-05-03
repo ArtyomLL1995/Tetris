@@ -792,7 +792,7 @@ class Figure {
         })
 
         const funcInterval = 5
-        const totalFuntTime = funcInterval * Utils.edgeSize
+        const totalFuncTime = funcInterval * Utils.edgeSize
 
         if (moveDownArr.length > 0) {
 
@@ -811,7 +811,7 @@ class Figure {
                 });
                 Canvas.initializeNewFigure()
                 this.calculatePoints(linesToRemove)
-            }, totalFuntTime);
+            }, totalFuncTime);
             MusicPlayer.playRemoveLinesAudio()
         } else {
             Canvas.points += 15
@@ -828,7 +828,7 @@ class Figure {
         Canvas.lines += linesToRemove
         Canvas.points += points
         Canvas.level = Math.ceil(Canvas.lines / 10)
-        if (Canvas.level < 6) {
+        if (Canvas.level <= 6) {
             Canvas.SPEED = Canvas.startSpeed - (100 * (Canvas.level - 1))
         } else {
             Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
