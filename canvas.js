@@ -812,7 +812,9 @@ class Figure {
                 Canvas.initializeNewFigure()
                 this.calculatePoints(linesToRemove)
             }, totalFuncTime);
+            
             MusicPlayer.playRemoveLinesAudio()
+
         } else {
             Canvas.points += 15
             Canvas.initializeNewFigure()
