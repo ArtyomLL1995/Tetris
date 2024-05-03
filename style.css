@@ -19,6 +19,7 @@ body {
 }
 
 #overlay {
+    overflow: hidden;
     position: absolute;
     top: 0;
     right: 0;
@@ -61,7 +62,7 @@ body {
 }
 
 .start-button {
-    position: relative; 
+    position: absolute; 
     top: 0px; 
     background-color:black; 
     color: white; 
@@ -74,13 +75,11 @@ body {
 }
 
 .music-name {
-    position: relative; 
-    top: 0px; 
+    position: absolute; 
     color: white; 
     padding: 10px; 
     font-size: 25px; 
     cursor: pointer; 
-    border: none; 
     display: inline-block;
     font-family: Jersey_25;
 }
@@ -124,7 +123,7 @@ body {
 
     #container {
         transform: translate(-50%, 0px);
-        bottom: 20px;
+        bottom: 70px;
         left: 50%;
     }
 
@@ -134,9 +133,8 @@ body {
 
     .music-name {
         font-size: 20px; 
-        top: 0px;
-        left: 0px;
-        width: 70%;
+        width: 100%;
+        word-wrap: break-word;
     }
 
     .best-results-container {

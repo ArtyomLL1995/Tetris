@@ -88,13 +88,16 @@ class Utils {
         scroreScreen.width = this.scoreCanvasWidth
         const childBlock = document.getElementById("child")
         const scroreBlock = document.getElementById("score")
+        const musicNameBlock = document.querySelector(".music-name")
         if (document.body.offsetWidth > this.smallScreenSizeBreakPoint) {
             childBlock.style.right = `-${childCanvas.offsetWidth+50}px`
             scroreBlock.style.top = `${childCanvas.offsetHeight+50}px`
             scroreBlock.style.right = `-${scroreBlock.offsetWidth+50}px`
+            musicNameBlock.style.top = '40px'
         } else {
             childBlock.style.top = `-${childCanvas.offsetHeight+10}px`
             scroreBlock.style.top = `-${scroreBlock.offsetHeight+10}px`
+            musicNameBlock.style.bottom = '10px'
         }
     }
 
