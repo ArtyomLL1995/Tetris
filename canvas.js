@@ -115,8 +115,15 @@ class Utils {
         return `rgba(${red},${green},${blue},${newOpacity})`
     }
 
+    static allowBackgroundChange = false
+
     static startGame() {
-        document.querySelector('.game-over-screen').style.display = 'none'
+        if (this.allowBackgroundChange) {
+            Utils.setBackgroundUrl()
+        } else {
+            this.allowBackgroundChange = true
+        }
+         document.querySelector('.game-over-screen').style.display = 'none'
         this.shuffle(MusicPlayer.music)
         Canvas.filledCoordsMap.clear()
         Canvas.SPEED = Canvas.startSpeed
@@ -129,7 +136,7 @@ class Utils {
     }
 
     static setBestResult(newBestResult) {
-        const bestResults = [...this.getBestResults().split(','), newBestResult].sort((a, b) => a - b)
+        const bestResults = [...this.getBestResults().split(','), newBestResult].sort((a, b) => b - a).filter(num => num > 0)
         if (bestResults.length > 10) {
             bestResults.pop()
         }
@@ -821,7 +828,11 @@ class Figure {
         Canvas.lines += linesToRemove
         Canvas.points += points
         Canvas.level = Math.ceil(Canvas.lines / 10)
-        Canvas.SPEED = Canvas.startSpeed - (100 * (Canvas.level - 1))
+        if (Canvas.level < 6) {
+            Canvas.SPEED = Canvas.startSpeed - (100 * (Canvas.level - 1))
+        } else {
+            Canvas.SPEED = Canvas.startSpeed - (50 * (Canvas.level - 1))
+        }
     }
 }
 
