@@ -74,7 +74,7 @@ class Utils {
     static scoreCanvasHeight = this.edgeSize * 5
 
     static childCanvasWidth = this.edgeSize * 4
-    static childCanvasHeight = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? this.edgeSize * 2 : this.edgeSize * 5
+    static childCanvasHeight = this.edgeSize * 2
 
     static setCanvasSize() {
         const canvas = document.getElementById("mainScreen")
@@ -364,15 +364,16 @@ class Canvas {
         this.scoreScreenCtx.clearRect(0, 0, Utils.scoreCanvasWidth, Utils.scoreCanvasHeight)
         this.scoreScreenCtx.font = document.body.offsetWidth > Utils.smallScreenSizeBreakPoint ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
-        this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
         if (document.body.offsetWidth > Utils.smallScreenSizeBreakPoint) {
             this.scoreScreenCtx.font = '25px Jersey_25'
+            this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 20)
             this.scoreScreenCtx.fillText('Lines ' + this.lines, 0, 60)
             this.scoreScreenCtx.fillText('Points ' + this.points, 0, 100)
         } else {
             this.scoreScreenCtx.font = '20px Jersey_25'
-            this.scoreScreenCtx.fillText('Lines ' + this.lines, 0, 50)
-            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 80)
+            this.scoreScreenCtx.fillText('LEVEL ' + this.level, 0, 40)
+            this.scoreScreenCtx.fillText('Lines ' + this.lines, 0, 70)
+            this.scoreScreenCtx.fillText('Points ' + this.points, 0, 100)
         }
     }
 
