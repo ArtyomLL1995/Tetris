@@ -5,10 +5,28 @@ class Utils {
 
     static edgeSize = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? 25 : 20
 
-    static lineStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6]
-    static otherStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6, this.edgeSize*7]
-    static cubeStartPositions = [0, this.edgeSize, this.edgeSize*2, this.edgeSize*3, this.edgeSize*4, this.edgeSize*5, this.edgeSize*6, this.edgeSize*7, this.edgeSize*8]
-    
+    static canvasWidth = this.edgeSize * 10
+    static canvasHeight = this.edgeSize * 20
+
+    static scoreCanvasWidth = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? this.edgeSize * 7 : this.edgeSize * 6
+    static scoreCanvasHeight = this.edgeSize * 5
+
+    static childCanvasWidth = this.edgeSize * 4
+    static childCanvasHeight = this.edgeSize * 2
+
+    static lineStartPositions = [...this.populateStartPositions(this.edgeSize*4)]
+    static otherStartPositions = [...this.populateStartPositions(this.edgeSize*3)]
+    static cubeStartPositions = [...this.populateStartPositions(this.edgeSize*2)]
+
+    static populateStartPositions(figureWidth) {
+        const maxOffset = this.canvasWidth - figureWidth
+        const positions = []
+        for (let i = 0; i <= maxOffset; i+= this.edgeSize) {
+            positions.push(i)
+        }
+        return positions
+    }
+
     static getRandomStartCoord(figureType) {
         if (figureType === 'line') {
             return this.lineStartPositions[Math.floor(Math.random() * this.lineStartPositions.length)]
@@ -66,15 +84,6 @@ class Utils {
         './images-small/13.gif',
         './images-small/14.gif',
     ]
-
-    static canvasWidth = this.edgeSize * 10
-    static canvasHeight = this.edgeSize * 20
-
-    static scoreCanvasWidth = document.body.offsetWidth > this.smallScreenSizeBreakPoint ? this.edgeSize * 7 : this.edgeSize * 6
-    static scoreCanvasHeight = this.edgeSize * 5
-
-    static childCanvasWidth = this.edgeSize * 4
-    static childCanvasHeight = this.edgeSize * 2
 
     static setCanvasSize() {
         const canvas = document.getElementById("mainScreen")
