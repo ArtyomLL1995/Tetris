@@ -346,11 +346,12 @@ class Canvas {
             Utils.setBestResult(this.points)
             Utils.renderBestResults()
             document.querySelector('.game-over-screen').style.display = 'flex'
+            cancelAnimationFrame(this.canvasRequestAnimationFrameId)
         } else {
             this.currentFigure.initializeListener()
             this.currentFigure.moveDown()
             this.currentFigure.calculateShadowCoords()
-            Canvas.childCtx.clearRect(0,0,130,100)
+            Canvas.childCtx.clearRect(0,0,Utils.childCanvasWidth,Utils.childCanvasHeight)
             this.drawNextFigure()
         }
     }
@@ -371,7 +372,6 @@ class Canvas {
 
     static drawScore() {
         this.scoreScreenCtx.clearRect(0, 0, Utils.scoreCanvasWidth, Utils.scoreCanvasHeight)
-        this.scoreScreenCtx.font = document.body.offsetWidth > Utils.smallScreenSizeBreakPoint ? '30px Jersey_25' : '20px Jersey_25'
         this.scoreScreenCtx.fillStyle = 'white'
         if (document.body.offsetWidth > Utils.smallScreenSizeBreakPoint) {
             this.scoreScreenCtx.font = '25px Jersey_25'
@@ -414,6 +414,7 @@ class Figure {
     boundKeyUp
     boundHeyDown
     allowChangeColor = true
+    createNewFigureTimeOffset = 800
 
     constructor(newFigureCoords, type, color) {
         this.type = type
@@ -624,7 +625,7 @@ class Figure {
 
     changeColorAnimation() {
 
-        const duration = 500
+        const duration = this.createNewFigureTimeOffset
         const gap = 0.5
         const date = new Date
 
@@ -669,7 +670,7 @@ class Figure {
 
         if (date.getTime() - this.startMoveDownAnimationTime > Canvas.SPEED) {
             if (!this.changeFigureCoords('down') && !this.createNewFigureTimeOutId) {
-                this.createNewFigureTimeOutId = setTimeout(() => this.createNewFigure(), 500) 
+                this.createNewFigureTimeOutId = setTimeout(() => this.createNewFigure(), this.createNewFigureTimeOffset) 
                 if (this.allowChangeColor) {
                     this.changeColorAnimation()
                     this.allowChangeColor = false
@@ -735,8 +736,8 @@ class Figure {
         const shadowCoords = this.activeFigure.map(figure => {
             return {...figure}
         })
-        let counter = 0
-        while(!this.collisionCheck(shadowCoords) && counter < 20) {
+        let counter = 0 // Without counter goes into infinite loop for some reason
+        while(!this.collisionCheck(shadowCoords) && counter < Utils.canvasHeight / Utils.edgeSize) {
             counter++
             shadowCoords.forEach(coord => coord.y += Utils.edgeSize)
         }
@@ -769,13 +770,15 @@ class Figure {
             this.allowChangeColor = false
             this.changeColorAnimation()
             if (!this.createNewFigureTimeOutId) {
-                this.createNewFigureTimeOutId = setTimeout(() => this.createNewFigure(), 500) 
+                this.createNewFigureTimeOutId = setTimeout(() => this.createNewFigure(), this.createNewFigureTimeOffset) 
             }
         }
         return collision
     }
 
     tetrisCheck() {
+
+        // Refactor this and rewrite to requestAnimationFrame
 
         const allRows = {}
         let linesToRemove = 0
@@ -847,10 +850,12 @@ class Figure {
         Canvas.points += points
         Canvas.level = Math.ceil(Canvas.lines / 10)
         if (currentLevel !== Canvas.level) {
-            if (Canvas.level <= 6) {
+            if (Canvas.level <= 5) {
                 Canvas.SPEED -= 100
-            } else {
+            } else if (Canvas.level > 5 && Canvas.level <= 15) {
                 Canvas.SPEED -= 50
+            } else {
+                Canvas.SPEED -= 10
             }
         }
     }
