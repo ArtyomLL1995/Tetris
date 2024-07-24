@@ -873,7 +873,6 @@ class TouchEventsHandler {
     static moveDownGap = 10
     
     static handleTouchStart(event) {
-        event.preventDefault()
         this.startSlideCoordY = event.changedTouches[0].pageY
         this.startSlideCoordX = event.changedTouches[0].pageX
         this.startXCoord = event.changedTouches[0].pageX
