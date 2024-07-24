@@ -873,6 +873,7 @@ class TouchEventsHandler {
     static moveDownGap = 10
     
     static handleTouchStart(event) {
+        event.preventDefault()
         this.startSlideCoordY = event.changedTouches[0].pageY
         this.startSlideCoordX = event.changedTouches[0].pageX
         this.startXCoord = event.changedTouches[0].pageX
@@ -882,6 +883,7 @@ class TouchEventsHandler {
     }
     
     static handleTouchMove(event) {
+        event.preventDefault()
         const currentXCoord = event.changedTouches[0].pageX
         const currentYCoord = event.changedTouches[0].pageY
         if (currentXCoord - this.startXCoord > this.moveGap) {
@@ -899,7 +901,7 @@ class TouchEventsHandler {
     }
     
     static handleTouchEnd(event) {
-        
+        event.preventDefault()
         const date = new Date()
         const currentTime = date.getTime()
         const currentXCoord = event.changedTouches[0].pageX
