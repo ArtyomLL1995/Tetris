@@ -217,7 +217,7 @@ class MusicPlayer {
         './Music/softy, Lawrence Walther - Daytrip.mp3',
         './Music/softy, Lawrence Walther - Falling Rain.mp3',
         './Music/softy, Lawrence Walther - Kites & Clouds.mp3',
-        '.Music/softy, Lawrence Walther - Silk.mp3',
+        './Music/softy, Lawrence Walther - Silk.mp3',
         './Music/Sweet Medicine, Lawrence Walther - From Coast to Coast.mp3',
         './Music/Sweet Medicine, Lawrence Walther - Ocean Girl.mp3',
         './Music/Yestalgia, Lawrence Walther, Shierro - Azimuth.mp3',
