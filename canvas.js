@@ -202,13 +202,13 @@ class MusicPlayer {
         // './Music/quiet-stars.mp3',
         // './Music/phonk.mp3',
         './Music/Kid Kio, Mantrick, Lawrence Walther - Sandcastle.mp3',
-        '.Music/Lawrence Walther - Floating, Drifting ft. Less Gravity.mp3',
-        '.Music/Lawrence Walther, Less Gravity - Just One Wish.mp3',
-        '.Music/Lawrence Walther, Less Gravity - That Dream About Flying.mp3',
-        '.Music/Lawrence Walther, Miramare, Yestalgia - Nowhere to Go.mp3',
-        '.Music/Lawrence Walther, mtch., Prithvi - Memories.mp3',
-        '.Music/Lawrence Walther, Shierro, Yestalgia - Souvenir.mp3',
-        '.Music/Lawrence Walther, Yestalgia - I\'d Like You to Stay.mp3'
+        './Music/Lawrence Walther - Floating, Drifting ft. Less Gravity.mp3',
+        './Music/Lawrence Walther, Less Gravity - Just One Wish.mp3',
+        './Music/Lawrence Walther, Less Gravity - That Dream About Flying.mp3',
+        './Music/Lawrence Walther, Miramare, Yestalgia - Nowhere to Go.mp3',
+        './Music/Lawrence Walther, mtch., Prithvi - Memories.mp3',
+        './Music/Lawrence Walther, Shierro, Yestalgia - Souvenir.mp3',
+        './Music/Lawrence Walther, Yestalgia - I\'d Like You to Stay.mp3'
     ]
 
     static soundTrack
