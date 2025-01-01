@@ -106,7 +106,7 @@ class Utils {
         } else {
             childBlock.style.top = `-${childCanvas.offsetHeight+10}px`
             scroreBlock.style.top = `-${scroreBlock.offsetHeight+10}px`
-            musicNameBlock.style.bottom = '10px'
+            musicNameBlock.style.top = '40px'
         }
     }
 

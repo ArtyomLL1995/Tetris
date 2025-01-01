@@ -122,8 +122,7 @@ body {
     }
 
     #container {
-        transform: translate(-50%, 0px);
-        bottom: 110px;
+        top: 170px;
         left: 50%;
     }
 
@@ -139,5 +138,6 @@ body {
 
     .best-results-container {
         font-size: 20px;
+        top: 100px;
     }
 }
