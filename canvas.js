@@ -641,6 +641,24 @@ class Figure {
                 this.figurePosition = newPosition
                 this.activeFigure = [...coordsCopy]
                 this.calculateShadowCoords()
+            } else {
+                // Wall kick: if any block is out of horizontal bounds, try shifting into bounds
+                const minX = Math.min(...coordsCopy.map(c => c.x))
+                const maxX = Math.max(...coordsCopy.map(c => c.x))
+                let shift = 0
+                if (minX < 0) {
+                    shift = -minX
+                } else if (maxX > Utils.canvasWidth - Utils.edgeSize) {
+                    shift = Utils.canvasWidth - Utils.edgeSize - maxX
+                }
+                if (shift !== 0) {
+                    coordsCopy.forEach(c => c.x += shift)
+                    if (!this.collisionCheck(coordsCopy)) {
+                        this.figurePosition = newPosition
+                        this.activeFigure = [...coordsCopy]
+                        this.calculateShadowCoords()
+                    }
+                }
             }
         }
     }
@@ -800,17 +818,13 @@ class Figure {
 
     tetrisCheck() {
 
-        // Refactor this and rewrite to requestAnimationFrame
-
         const allRows = {}
         let linesToRemove = 0
         let lowKey = []
 
         Array.from(Canvas.filledCoordsMap.keys()).forEach(coord => {
             if (allRows[coord.y] === undefined) allRows[coord.y] = [coord]
-            else {
-                allRows[coord.y].push(coord)
-            }
+            else allRows[coord.y].push(coord)
         })
 
         for (const [key, value] of Object.entries(allRows)) {
@@ -821,38 +835,45 @@ class Figure {
             }
         }
 
-        const moveDownArr = []
+        const moveDownMap = new Map()
 
         Array.from(Canvas.filledCoordsMap.keys()).forEach(coord => {
-            lowKey.forEach(key => {
-                if (coord.y < key) {
-                    moveDownArr.push(coord)
-                } 
-            })
+            const count = lowKey.filter(key => coord.y < key).length
+            if (count > 0) {
+                moveDownMap.set(coord, count)
+            }
         })
 
-        const funcInterval = 5
-        const totalFuncTime = funcInterval * Utils.edgeSize
+        const totalFuncTime = 5 * Utils.edgeSize
 
-        if (moveDownArr.length > 0) {
+        if (moveDownMap.size > 0) {
 
-            const intervalId = setInterval(() => {
-                moveDownArr.forEach(coord => {
-                    coord.y += 1; 
-                });
-            }, funcInterval)
-    
-            setTimeout(() => {
-                clearInterval(intervalId);
-                moveDownArr.forEach(coord => {
-                    if (coord.y % Utils.edgeSize !== 0) {
-                        coord.y += Utils.edgeSize - coord.y % Utils.edgeSize
-                    }
-                });
-                Canvas.initializeNewFigure()
-                this.calculatePoints(linesToRemove)
-            }, totalFuncTime);
+            const startYMap = new Map(Array.from(moveDownMap.keys()).map(coord => [coord, coord.y]))
+            let startTime = null
 
+            const animate = (timestamp) => {
+                if (startTime === null) startTime = timestamp
+                const elapsed = timestamp - startTime
+
+                if (elapsed < totalFuncTime) {
+                    const progress = elapsed / totalFuncTime
+                    moveDownMap.forEach((count, coord) => {
+                        coord.y = startYMap.get(coord) + Math.floor(progress * Utils.edgeSize * count)
+                    })
+                    requestAnimationFrame(animate)
+                } else {
+                    moveDownMap.forEach((count, coord) => {
+                        coord.y = startYMap.get(coord) + Utils.edgeSize * count
+                        if (coord.y % Utils.edgeSize !== 0) {
+                            coord.y += Utils.edgeSize - coord.y % Utils.edgeSize
+                        }
+                    })
+                    Canvas.initializeNewFigure()
+                    this.calculatePoints(linesToRemove)
+                }
+            }
+
+            requestAnimationFrame(animate)
             MusicPlayer.playRemoveLinesAudio()
 
         } else {
